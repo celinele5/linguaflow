@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinguaFlow — Mandarin & Japanese Writing Studio (Attack on Titan)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Futura', 'Jost', 'Aptos', 'Inter', 'Noto Sans JP', 'Noto Sans SC', 'sans-serif'],
+            serif: ['Aptos', 'Inter', 'Noto Sans JP', 'Noto Sans SC', 'sans-serif'],
+            display: ['Futura', 'Jost', 'Aptos', 'Inter', 'Noto Sans JP', 'Noto Sans SC', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Attack on Titan Regiment Theme Variables */
+    :root {
+      /* Default: Survey Corps (調査兵団 - Wings of Freedom) */
+      --bg-app: #141a17;
+      --bg-card: #1c2420;
+      --bg-subtle: #242f2a;
+      --text-main: #f2ede2;
+      --text-muted: #a7b3ab;
+      --border-color: #3a4941;
+      --accent: #d4a348;
+      --accent-soft: rgba(212, 163, 72, 0.16);
+    }
+    .theme-paradis {
+      /* Wall Maria Parchment */
+      --bg-app: #efe6d5;
+      --bg-card: #faf4e8;
+      --bg-subtle: #e6dac3;
+      --text-main: #2b2218;
+      --text-muted: #6e5c47;
+      --border-color: #cbbba0;
+      --accent: #8f3926;
+      --accent-soft: rgba(143, 57, 38, 0.12);
+    }
+    .theme-garrison {
+      /* Garrison Regiment (駐屯兵団 - Crimson & Brass) */
+      --bg-app: #1d1414;
+      --bg-card: #291c1c;
+      --bg-subtle: #382626;
+      --text-main: #f7efe8;
+      --text-muted: #bfa8a3;
+      --border-color: #523838;
+      --accent: #e05a47;
+      --accent-soft: rgba(224, 90, 71, 0.16);
+    }
+    .theme-mp {
+      /* Military Police Brigade (憲兵団 - Royal Forest & Gold) */
+      --bg-app: #161c17;
+      --bg-card: #202921;
+      --bg-subtle: #2b382d;
+      --text-main: #f4f1e8;
+      --text-muted: #a8b5aa;
+      --border-color: #465949;
+      --accent: #eab308;
+      --accent-soft: rgba(234, 179, 8, 0.16);
+    }
+    .theme-paths {
+      /* Founding Titan / Coordinate Paths (座標) */
+      --bg-app: #0b111e;
+      --bg-card: #121b2e;
+      --bg-subtle: #1b2842;
+      --text-main: #e2f1ff;
+      --text-muted: #8aa8c7;
+      --border-color: #2c4268;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.16);
+    }
+
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      transition: background-color 0.25s ease, color 0.25s ease;
+      background-image: radial-gradient(circle at 50% 0%, rgba(212, 163, 72, 0.06), transparent 60%);
+    }
+    .card-surface {
+      background-color: var(--bg-card);
+      border-color: var(--border-color);
+    }
+    .subtle-surface {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-color);
+    }
+    .text-muted {
+      color: var(--text-muted);
+    }
+    .border-theme {
+      border-color: var(--border-color);
+    }
+    .font-regiment {
+      font-family: 'Futura', 'Jost', 'Aptos', 'Inter', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(150, 145, 135, 0.35); border-radius: 9999px; }
+
+    /* Virtual Key Active Highlight */
+    .vkey {
+      transition: transform 0.06s ease, background-color 0.1s ease, box-shadow 0.1s ease;
+      user-select: none;
+    }
+    .vkey:active, .vkey.key-pressed {
+      transform: translateY(2px) scale(0.96);
+      background-color: var(--accent) !important;
+      color: #141a17 !important;
+      box-shadow: none !important;
+    }
+
+    /* Flame pulse animation */
+    @keyframes flamePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .flame-active {
+      animation: flamePulse 2.2s infinite ease-in-out;
+    }
+
+    /* Blind Bag Hover & Open Animation */
+    @keyframes crateFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes crateShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-4deg) scale(1.04); }
+      40% { transform: rotate(4deg) scale(1.06); }
+      60% { transform: rotate(-3deg) scale(1.04); }
+      80% { transform: rotate(3deg) scale(1.02); }
+    }
+    .crate-card {
+      animation: crateFloat 3.4s ease-in-out infinite;
+    }
+    .crate-card:nth-child(2) { animation-delay: 0.4s; }
+    .crate-card:nth-child(3) { animation-delay: 0.8s; }
+    .crate-opening {
+      animation: crateShake 0.45s ease-in-out !important;
+    }
+
+    /* Writing Editor Font */
+    #writing-editor {
+      font-family: 'Aptos', 'Inter', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+      line-height: 1.9;
+    }
+
+    /* Interactive Character Token Hover */
+    .char-lookup {
+      cursor: pointer;
+      border-bottom: 1.5px dotted rgba(212, 163, 72, 0.55);
+      transition: background-color 0.12s ease, color 0.12s ease;
+      border-radius: 3px;
+      padding: 0 1px;
+    }
+    .char-lookup:hover {
+      background-color: var(--accent-soft);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-500/20">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Floating Character / Word Meaning Inspector Popover -->
+  <div id="char-inspector-card" class="fixed z-50 hidden card-surface border-2 border-amber-500/60 shadow-2xl rounded-2xl p-3.5 max-w-xs w-72 transition-all duration-150">
+    <div class="flex items-start justify-between gap-2 mb-1.5">
+      <div class="flex items-baseline gap-2">
+        <span id="inspector-char" class="text-2xl font-bold tracking-wide"></span>
+        <span id="inspector-reading" class="text-xs font-semibold px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-500"></span>
+      </div>
+      <button id="btn-close-inspector" type="button" class="text-xs text-muted hover:text-current p-1">✕</button>
+    </div>
+    <p id="inspector-meaning" class="text-xs sm:text-sm font-medium leading-snug"></p>
+    <div id="inspector-breakdown" class="mt-2 pt-2 border-t border-theme space-y-1 text-xs text-muted hidden"></div>
+    <div class="mt-2 pt-1.5 border-t border-theme flex items-center justify-between text-[11px] text-muted">
+      <span id="inspector-lang-tag">Character Lookup</span>
+      <button id="btn-inspector-insert" type="button" class="font-semibold text-amber-500 hover:underline">+ Insert into draft</button>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- PRE-WRITING EXPEDITION BLIND BAG / TÚI MÙ GATE                          -->
+  <!-- ======================================================================= -->
+  <div id="mystery-gate-overlay" class="fixed inset-0 z-40 bg-[#0e1310]/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="max-w-4xl w-full card-surface border-2 border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-auto">
+      <!-- Gate Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-theme pb-5">
+        <div class="flex items-center gap-3.5">
+          <!-- Wings of Freedom Emblem SVG -->
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2d4a3e] to-[#1a2c24] border border-amber-400/50 flex items-center justify-center shadow-md shrink-0">
+            <svg class="w-8 h-8" viewBox="0 0 64 64" fill="none">
+              <path d="M32 10C24 14 12 20 8 34C14 30 21 29 27 32C21 35 16 40 15 49C21 44 27 42 32 44V10Z" fill="#f8fafc"/>
+              <path d="M32 10C40 14 52 20 56 34C50 30 43 29 37 32C43 35 48 40 49 49C43 44 37 42 32 44V10Z" fill="#38bdf8"/>
+              <path d="M32 12V54" stroke="#d4a348" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-bold uppercase tracking-widest text-amber-400">Survey Corps • 調査兵団</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-semibold">Lucky Blind Bag</span>
+            </div>
+            <h1 class="font-regiment text-xl sm:text-2xl font-extrabold tracking-wide mt-0.5">Pick Your Mystery Blind Bag 🧧</h1>
+          </div>
+        </div>
+
+        <!-- Language Toggle inside Gate -->
+        <div class="flex items-center p-1 rounded-xl subtle-surface border self-start sm:self-center">
+          <button type="button" data-gate-lang="zh" class="gate-lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+            <span>🇨🇳</span><span>中文 Mandarin</span>
+          </button>
+          <button type="button" data-gate-lang="ja" class="gate-lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+            <span>🇯🇵</span><span>日本語 Japanese</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pinned Commander Motivational Quote inside Gate -->
+      <div class="rounded-2xl subtle-surface border border-amber-500/30 px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">⚔️</span>
+          <div>
+            <p id="gate-quote-native" class="text-sm sm:text-base font-bold text-amber-300">「心臓を捧げよ！」 — Dedicate your heart!</p>
+            <p id="gate-quote-sub" class="text-xs text-muted">Commander Erwin Smith • Tear open one of the 3 lucky blind bags below to reveal today's writing topic.</p>
+          </div>
+        </div>
+        <button type="button" id="btn-reroll-crates" class="px-3 py-1.5 rounded-xl text-xs font-semibold card-surface border border-amber-500/40 hover:border-amber-400 transition shrink-0">
+          🎲 New Blind Bags
+        </button>
+      </div>
+
+      <!-- 3 Interactive Mystery Blind Bags -->
+      <div id="mystery-crates-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Rendered dynamically by renderMysteryCrates() -->
+      </div>
+
+      <!-- Revealed Mission Preview & Action Footer -->
+      <div id="crate-revealed-panel" class="hidden rounded-2xl border-2 border-amber-500/50 bg-amber-500/10 p-4 sm:p-5 space-y-3 transition-all">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span>🧧</span> Blind Bag Unsealed!
+          </span>
+          <span id="revealed-crate-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full card-surface border">Blind Bag #1</span>
+        </div>
+        <div>
+          <p id="revealed-topic-native" class="text-lg sm:text-xl font-bold leading-snug"></p>
+          <p id="revealed-topic-en" class="text-xs sm:text-sm text-muted mt-0.5"></p>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-theme">
+          <button type="button" id="btn-pick-another-crate" class="px-3.5 py-2 rounded-xl text-xs font-semibold subtle-surface border hover:border-amber-400 transition">
+            ↺ Open Another Blind Bag
+          </button>
+          <button type="button" id="btn-enter-writing-pane" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-stone-950 shadow-lg transition flex items-center gap-2">
+            <span>✨</span> Enter Writing Pane With This Topic →
+          </button>
+        </div>
+      </div>
+
+      <!-- Skip / Free Write Option -->
+      <div class="flex items-center justify-between text-xs text-muted pt-1">
+        <span>Tip: You can re-open the Blind Bag draw anytime from the top bar.</span>
+        <button type="button" id="btn-skip-gate-freewrite" class="font-semibold text-amber-400 hover:underline">
+          Skip &amp; Free Write Any Topic →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="card-surface border-b sticky top-0 z-30 backdrop-blur-md bg-opacity-95">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand: Survey Corps Wings of Freedom -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2d4a3e] to-[#17261f] border border-amber-400/50 flex items-center justify-center shadow-sm">
+          <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none">
+            <path d="M32 10C24 14 12 20 8 34C14 30 21 29 27 32C21 35 16 40 15 49C21 44 27 42 32 44V10Z" fill="#f8fafc"/>
+            <path d="M32 10C40 14 52 20 56 34C50 30 43 29 37 32C43 35 48 40 49 49C43 44 37 42 32 44V10Z" fill="#38bdf8"/>
+            <path d="M32 12V54" stroke="#d4a348" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-regiment font-bold text-base sm:text-lg tracking-wide">LinguaFlow</span>
+          <span class="hidden md:inline-block text-[11px] text-amber-400/90 ml-2 px-2 py-0.5 rounded-full subtle-surface border border-amber-500/30 font-semibold">Survey Corps • 調査兵団</span>
+        </div>
+      </div>
+
+      <!-- Precision 2-Language Segmented Switcher -->
+      <div class="flex items-center p-1 rounded-xl subtle-surface border" role="tablist" aria-label="Target Writing Language">
+        <button type="button" id="tab-lang-zh" data-lang="zh" class="lang-tab px-3 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+          <span>🇨🇳</span>
+          <span>中文 Mandarin</span>
+        </button>
+        <button type="button" id="tab-lang-ja" data-lang="ja" class="lang-tab px-3 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+          <span>🇯🇵</span>
+          <span>日本語 Japanese</span>
+        </button>
+      </div>
+
+      <!-- Right Controls: Blind Bag, Streak, Reminder, Theme, Archive -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- Re-open Blind Bag Button -->
+        <button id="btn-open-mystery-gate" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 font-semibold text-xs sm:text-sm transition" title="Open Lucky Blind Bag">
+          <span>🧧</span>
+          <span class="hidden md:inline">Blind Bag</span>
+        </button>
+
+        <!-- Streak Badge Button -->
+        <button id="btn-streak-modal" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-semibold text-sm transition" title="View Daily Streak & Regiment Themes">
+          <span id="header-flame" class="text-base flame-active">🔥</span>
+          <span id="header-streak-count">1</span>
+          <span class="hidden sm:inline text-xs font-medium">day</span>
+        </button>
+
+        <!-- Reminder Button -->
+        <button id="btn-reminder-modal" class="p-2 rounded-xl subtle-surface border hover:opacity-80 transition relative" title="Daily Writing Reminder">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          <span id="reminder-dot" class="hidden w-2 h-2 rounded-full bg-emerald-500 absolute top-1.5 right-1.5"></span>
+        </button>
+
+        <!-- Archive Button -->
+        <button id="btn-archive-modal" class="p-2 rounded-xl subtle-surface border hover:opacity-80 transition" title="Expedition Journal (Saved Entries)">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+          </svg>
+        </button>
+
+        <!-- Theme Switcher -->
+        <button id="btn-cycle-theme" class="p-2 rounded-xl subtle-surface border hover:opacity-80 transition" title="Cycle Regiment Theme">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- PINNED TOP SURVEY CORPS MOTIVATIONAL BANNER -->
+    <div class="border-t border-theme bg-gradient-to-r from-amber-500/10 via-emerald-950/30 to-amber-500/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-regiment font-bold tracking-wider uppercase text-[10px] shrink-0">
+            ⚔️ Regiment Creed
+          </span>
+          <p id="pinned-top-quote" class="truncate font-medium">
+            <span class="font-bold text-amber-300">「心臓を捧げよ！」 / 「献出心脏吧！」</span> — “Dedicate your heart! Every sentence written pushes humanity beyond the walls.” <span class="text-muted">— Erwin Smith</span>
+          </p>
+        </div>
+        <button type="button" id="btn-next-aot-quote" class="text-[11px] font-semibold text-amber-400 hover:underline shrink-0">
+          Next Quote ↻
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Prompt, Editor & Virtual Keyboard (7 cols on lg) -->
+    <div class="lg:col-span-7 flex flex-col gap-5">
+
+      <!-- Daily Motivator & Prompt Card -->
+      <section class="card-surface border rounded-2xl p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400" id="prompt-badge">Expedition Topic</span>
+            <span class="text-xs text-muted" id="motivator-quote">Dedicate your heart—just 3 sentences a day builds real fluency.</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btn-toggle-hint" class="px-2.5 py-1 rounded-lg text-xs font-medium subtle-surface border hover:border-amber-500/50 transition flex items-center gap-1">
+              <span>💡</span> Hints / Vocab
+            </button>
+            <button id="btn-shuffle-prompt" class="px-2.5 py-1 rounded-lg text-xs font-medium subtle-surface border hover:border-amber-500/50 transition flex items-center gap-1" title="Open New Blind Bag">
+              <span>🧧</span> Blind Bag
+            </button>
+            <button id="btn-free-write" class="px-2.5 py-1 rounded-lg text-xs font-medium subtle-surface border hover:border-amber-500/50 transition" title="Write about anything on your mind">
+              ✍️ Free Write
+            </button>
+          </div>
+        </div>
+
+        <!-- Prompt Display -->
+        <div id="prompt-display" class="space-y-1">
+          <p id="prompt-native" class="text-base sm:text-lg font-semibold leading-snug"></p>
+          <p id="prompt-en" class="text-xs sm:text-sm text-muted"></p>
+          <p class="text-[11px] text-amber-400/80 pt-0.5">💡 Tip: Highlight any character in the editor—or click any dotted-underlined character—to see its reading &amp; meaning.</p>
+        </div>
+
+        <!-- Collapsible Hint Drawer -->
+        <div id="hint-drawer" class="hidden mt-3 pt-3 border-t border-theme space-y-2.5 text-sm">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-muted">Starter Frame</span>
+            <p id="hint-starter" class="mt-0.5 font-medium px-3 py-2 rounded-xl subtle-surface border select-all cursor-pointer" title="Click to insert into editor"></p>
+          </div>
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-muted">Useful Vocabulary (Click to insert)</span>
+            <div id="hint-vocab" class="mt-1.5 flex flex-wrap gap-1.5"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Writing Editor Card -->
+      <section class="card-surface border rounded-2xl shadow-sm flex flex-col overflow-hidden">
+        <!-- Editor Toolbar -->
+        <div class="px-4 py-2.5 border-b border-theme subtle-surface flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <!-- Instant Zero-Space Script Mode Toggle -->
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="toggle-instant-script" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-stone-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 relative"></div>
+              <span class="text-xs font-semibold">Instant Script IME</span>
+            </label>
+            <span id="ime-mode-badge" class="text-[11px] px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 font-medium">
+              Zero-Space Auto ON
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Virtual Keyboard Toggle -->
+            <button id="btn-toggle-vk" class="px-2.5 py-1 rounded-lg text-xs font-semibold border border-theme card-surface hover:border-amber-500 transition flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 17h8"/>
+              </svg>
+              <span id="vk-btn-label">Hide Keyboard</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Candidate / Composition Bar (for Mandarin Pinyin, Japanese Kanji) -->
+        <div id="ime-candidate-bar" class="hidden px-4 py-2 bg-amber-500/10 border-b border-theme flex items-center justify-between gap-2 text-sm overflow-x-auto">
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400" id="ime-buffer-label">Composing:</span>
+            <span id="ime-buffer-display" class="font-mono font-bold px-2 py-0.5 rounded bg-black/40 text-amber-300 underline decoration-amber-500 decoration-2 underline-offset-2"></span>
+          </div>
+          <div id="ime-candidates-list" class="flex items-center gap-1.5 overflow-x-auto py-0.5"></div>
+          <div class="hidden sm:flex items-center gap-1.5 text-[11px] text-muted shrink-0" id="ime-shortcut-hint">
+            <span>1-9 pick • Space #1 • Esc raw</span>
+          </div>
+        </div>
+
+        <!-- Textarea Writing Canvas -->
+        <div class="relative flex-1">
+          <textarea
+            id="writing-editor"
+            rows="9"
+            placeholder="Start writing here... Highlight any unknown character to reveal its reading and meaning."
+            class="w-full p-5 sm:p-6 bg-transparent text-lg sm:text-xl focus:outline-none resize-y min-h-[230px]"
+          ></textarea>
+        </div>
+
+        <!-- Interactive Character Reader Strip -->
+        <div id="draft-reader-bar" class="hidden px-4 py-2 border-t border-theme bg-amber-500/5 flex items-center gap-2 overflow-x-auto text-sm">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-muted shrink-0">Tap Character to Inspect:</span>
+          <div id="draft-reader-tokens" class="flex items-center gap-0.5 flex-wrap"></div>
+        </div>
+
+        <!-- Bottom Editor Status & Action Bar -->
+        <div class="px-4 py-3 border-t border-theme subtle-surface flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3 text-xs text-muted">
+            <span><strong id="word-count" class="font-semibold text-current">0</strong> tokens</span>
+            <span>•</span>
+            <span><strong id="char-count" class="font-semibold text-current">0</strong> chars</span>
+            <span id="live-status-pill" class="hidden sm:inline-flex items-center gap-1 text-emerald-400 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Live Coach Active
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="btn-save-entry" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-theme card-surface hover:bg-amber-500/10 transition">
+              Log Entry
+            </button>
+            <button id="btn-analyze" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-stone-950 shadow-sm transition flex items-center gap-1.5">
+              <span>⚔️</span> Correct &amp; Native Coach
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Auto-Switching Virtual Keyboard -->
+      <section id="virtual-keyboard-section" class="card-surface border rounded-2xl p-3 sm:p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2.5 px-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-muted" id="vk-title">Virtual Keyboard</span>
+            <span class="text-[11px] text-muted hidden sm:inline" id="vk-helper-tip">Type on your physical keyboard or tap keys below</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btn-vk-shift" class="px-2.5 py-1 rounded-lg text-xs font-semibold subtle-surface border hover:border-amber-500 transition">
+              ⇧ Shift
+            </button>
+          </div>
+        </div>
+        <div id="vk-rows" class="flex flex-col gap-1.5 select-none">
+          <!-- Dynamically rendered keyboard rows -->
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column: Survey Corps Pinned Side Pillar + AI Native Coach (5 cols on lg) -->
+    <div class="lg:col-span-5 flex flex-col gap-5">
+
+      <!-- PINNED REGIMENT MOTIVATION PILLAR -->
+      <aside class="card-surface border border-amber-500/35 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <span class="text-[11px] font-regiment font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5">
+            <span>🛡️</span> Wall Rose Field Pillar
+          </span>
+          <span id="pillar-speaker-badge" class="text-[11px] px-2 py-0.5 rounded-full subtle-surface border text-muted">Erwin Smith</span>
+        </div>
+        <blockquote class="space-y-1">
+          <p id="pillar-quote-native" class="text-sm sm:text-base font-bold text-amber-300 leading-snug"></p>
+          <p id="pillar-quote-en" class="text-xs text-muted italic leading-relaxed"></p>
+        </blockquote>
+      </aside>
+
+      <!-- Native Coach Panel -->
+      <section class="card-surface border rounded-2xl p-5 shadow-sm flex-1 flex flex-col">
+        <div class="flex items-center justify-between pb-3.5 border-b border-theme">
+          <div>
+            <h2 class="font-bold text-base sm:text-lg flex items-center gap-2">
+              <span>🎯</span> Native Coach &amp; Corrections
+            </h2>
+            <p class="text-xs text-muted">Grammar fixes + what natives actually say nowadays</p>
+          </div>
+          <!-- Live Coach Toggle -->
+          <label class="inline-flex items-center gap-1.5 cursor-pointer select-none" title="Automatically analyze pauses while you write">
+            <input type="checkbox" id="toggle-live-coach" class="sr-only peer">
+            <div class="w-8 h-4 bg-stone-600 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+            <span class="text-xs font-medium text-muted">Live</span>
+          </label>
+        </div>
+
+        <!-- Coach Content Area -->
+        <div id="coach-container" class="flex-1 py-4 space-y-4 overflow-y-auto">
+          <!-- Empty State -->
+          <div id="coach-empty-state" class="h-full flex flex-col items-center justify-center text-center py-8 px-4">
+            <div class="w-12 h-12 rounded-2xl subtle-surface border border-amber-500/30 flex items-center justify-center text-2xl mb-3">
+              ⚔️
+            </div>
+            <h3 class="font-semibold text-sm mb-1">Awaiting Your Field Report</h3>
+            <p class="text-xs text-muted max-w-xs leading-relaxed">
+              Write a few sentences in your target language, then click <strong class="text-amber-400">Correct &amp; Native Coach</strong> for grammar polishing, modern slang/expressions, and next writing directions.
+            </p>
+            <button id="btn-insert-sample" class="mt-4 px-3 py-1.5 rounded-xl text-xs font-medium subtle-surface border hover:border-amber-500 transition">
+              Try with a sample paragraph →
+            </button>
+          </div>
+
+          <!-- Loading Skeleton -->
+          <div id="coach-loading" class="hidden space-y-4 animate-pulse py-4">
+            <div class="h-24 rounded-xl subtle-surface"></div>
+            <div class="h-32 rounded-xl subtle-surface"></div>
+            <div class="h-28 rounded-xl subtle-surface"></div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="coach-results" class="hidden space-y-4">
+            <!-- 1. Polished & Corrected Version -->
+            <div class="rounded-xl subtle-surface border p-4 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span>✓</span> Natural &amp; Corrected Version
+                </span>
+                <button id="btn-apply-correction" class="text-xs font-medium text-amber-400 hover:underline">
+                  Replace in editor
+                </button>
+              </div>
+              <p id="res-corrected" class="text-base font-medium leading-relaxed"></p>
+              <ul id="res-fixes" class="text-xs text-muted space-y-1 pt-1 border-t border-theme list-disc list-inside"></ul>
+            </div>
+
+            <!-- 2. How Natives Actually Say It Nowadays -->
+            <div class="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <span>🗣️</span> How Natives Say It Nowadays
+                </span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-medium">Modern &amp; Casual</span>
+              </div>
+              <div id="res-native-phrases" class="space-y-2.5"></div>
+            </div>
+
+            <!-- 3. Ideas & Next Directions -->
+            <div class="rounded-xl subtle-surface border p-4 space-y-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                <span>🧭</span> Ideas &amp; Next Writing Directions
+              </span>
+              <p class="text-xs text-muted">Keep going! Click any direction below to insert a starter:</p>
+              <div id="res-next-ideas" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Streak & Rewards Modal -->
+  <div id="modal-streak" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="card-surface border rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="text-3xl">🔥</span>
+          <div>
+            <h3 class="font-regiment font-bold text-lg"><span id="modal-streak-days">1</span>-Day Expedition Streak</h3>
+            <p class="text-xs text-muted">Total characters logged: <strong id="modal-total-words">0</strong></p>
+          </div>
+        </div>
+        <button data-close-modal="modal-streak" class="p-1.5 rounded-lg subtle-surface hover:opacity-80">✕</button>
+      </div>
+
+      <!-- Milestone Badges Grid -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-muted">Regiment Ranks &amp; Theme Rewards</h4>
+        <div id="streak-milestones-grid" class="grid grid-cols-2 gap-2.5"></div>
+      </div>
+
+      <!-- Theme Picker (shows unlocked vs locked) -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-muted">Regiment Themes</h4>
+        <div id="theme-selector-grid" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <div class="pt-2 border-t border-theme flex items-center justify-between gap-2">
+        <button id="btn-simulate-streak" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 transition">
+          ⚡ Demo: +1 Streak Day
+        </button>
+        <button data-close-modal="modal-streak" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-stone-950">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Reminder Modal -->
+  <div id="modal-reminder" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="card-surface border rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2"><span>⏰</span> Daily Writing Reminder</h3>
+        <button data-close-modal="modal-reminder" class="p-1.5 rounded-lg subtle-surface hover:opacity-80">✕</button>
+      </div>
+      <p class="text-xs text-muted leading-relaxed">
+        Consistency builds fluency. Set a daily nudge time and we will remind you while your browser is open.
+      </p>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1">Daily Reminder Time</label>
+          <input type="time" id="reminder-time-input" value="20:00" class="w-full subtle-surface border rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="checkbox" id="reminder-enabled-checkbox" class="rounded text-amber-500 focus:ring-amber-500">
+          <span>Enable daily reminder</span>
+        </label>
+      </div>
+      <div class="pt-2 border-t border-theme flex justify-end gap-2">
+        <button id="btn-test-reminder" class="px-3 py-1.5 rounded-xl text-xs font-medium subtle-surface border">Test Alert</button>
+        <button id="btn-save-reminder" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-stone-950">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Journal Archive Modal -->
+  <div id="modal-archive" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="card-surface border rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2"><span>📚</span> Saved Writing Journal</h3>
+        <button data-close-modal="modal-archive" class="p-1.5 rounded-lg subtle-surface hover:opacity-80">✕</button>
+      </div>
+      <div id="archive-list" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. DEDICATED MANDARIN & JAPANESE LANGUAGE CONFIGURATIONS + BLIND BAG TOPICS
+    // =========================================================================
+    const AOT_QUOTES = [
+      {
+        speaker: 'Erwin Smith',
+        ja: '「心臓を捧げよ！」',
+        zh: '「献出心脏吧！」',
+        en: '“Dedicate your heart! Every sentence you write pushes humanity past the walls.”'
+      },
+      {
+        speaker: 'Eren Yeager',
+        ja: '「戦わなければ勝てない…戦え！戦え！」',
+        zh: '「不战斗就无法获胜……战斗吧！」',
+        en: '“If you don’t fight, you can’t win. Keep writing even when the words feel tough!”'
+      },
+      {
+        speaker: 'Levi Ackerman',
+        ja: '「悔いが残らない方を自分で選べ。」',
+        zh: '「选择不会让自己后悔的那条路吧。」',
+        en: '“Choose the path you won’t regret—5 minutes of focus beats an hour of hesitation.”'
+      },
+      {
+        speaker: 'Mikasa Ackerman',
+        ja: '「この世界は残酷だ…そして、とても美しい。」',
+        zh: '「这个世界很残酷……但同时也非常美丽。」',
+        en: '“This world is cruel… and yet so beautiful. Capture the beauty in your day.”'
+      },
+      {
+        speaker: 'Armin Arlert',
+        ja: '「何かを変えることのできる人間がいるとすれば、その人はきっと…大事なものを捨てることができる人だ。」',
+        zh: '「能够改变什么的人，必定是能够舍弃重要之物的人。」',
+        en: '“To step outside the walls of your native language, dare to make mistakes and move forward.”'
+      }
+    ];
+
+    const LANGUAGES = [
+      {
+        id: 'zh',
+        name: 'Mandarin Chinese',
+        native: '中文 (普通话)',
+        dir: 'ltr',
+        imeType: 'pinyin',
+        imeHint: 'Smart Pinyin (press 1–9 or Space to pick; meanings shown)',
+        placeholder: 'Type Pinyin naturally without spaces (e.g., "jinnian" → 今年)... Highlight any character to inspect!',
+        sample: '今天下午我去了一家新开的咖啡馆，环境很安静，咖啡也特别好喝。',
+        prompts: [
+          {
+            crateCode: 'BLIND BAG • WALL MARIA',
+            crateTag: 'Daily Reflection',
+            native: '今天有什么让你觉得开心或放松的小事？',
+            en: 'What small thing made you feel happy or relaxed today?',
+            starter: '今天让我觉得特别开心的一件事是……',
+            vocab: [['放松 (fàngsōng)', 'relax / unwind'], ['顺便 (shùnbiàn)', 'by the way / while at it'], ['超级 (chāojí)', 'super / ultra'], ['充电 (chōngdiàn)', 'recharge energy']]
+          },
+          {
+            crateCode: 'BLIND BAG • TROST DISTRICT',
+            crateTag: 'Weekend Plans',
+            native: '周末你最喜欢怎么度过？',
+            en: 'How do you like to spend your weekend most?',
+            starter: '一到周末，我最喜欢……',
+            vocab: [['睡懒觉 (shuì lǎnjiào)', 'sleep in'], ['打卡 (dǎkǎ)', 'check in at a trendy spot'], ['宅在家里 (zhái zài jiālǐ)', 'chill at home'], ['约朋友 (yuē péngyou)', 'hang out with friends']]
+          },
+          {
+            crateCode: 'BLIND BAG • RECON MISSION',
+            crateTag: 'Culture & Media',
+            native: '最近有没有一首歌、一部电影或一本书让你印象深刻？',
+            en: 'Has a song, movie, or book left a deep impression on you recently?',
+            starter: '最近我一直在听/看……，它让我想到……',
+            vocab: [['印象深刻 (yìnxiàng shēnkè)', 'memorable'], ['共鸣 (gòngmíng)', 'resonance'], ['推荐 (tuījiàn)', 'recommend'], ['治愈 (zhìyù)', 'healing / comforting']]
+          },
+          {
+            crateCode: 'BLIND BAG • BEYOND THE WALLS',
+            crateTag: 'Dream Destination',
+            native: '如果可以立刻去任何地方旅行，你想去哪里？为什么？',
+            en: 'If you could travel anywhere right away, where would you go and why?',
+            starter: '如果可以马上出发，我最想去的地方是……',
+            vocab: [['出发 (chūfā)', 'set off / depart'], ['风景 (fēngjǐng)', 'scenery'], ['美食 (měishí)', 'delicious food'], ['自由 (zìyóu)', 'freedom']]
+          },
+          {
+            crateCode: 'BLIND BAG • MESS HALL RATION',
+            crateTag: 'Comfort Food',
+            native: '心情不好或者很累的时候，你最想吃什么美食？',
+            en: 'When you are tired or down, what comfort food do you crave most?',
+            starter: '每次觉得特别累的时候，我就很想吃……',
+            vocab: [['治愈系 (zhìyù xì)', 'comforting / healing'], ['胃口 (wèikǒu)', 'appetite'], ['夜宵 (yèxiāo)', 'late-night snack'], ['满足 (mǎnzú)', 'satisfied']]
+          }
+        ],
+        keyboard: [
+          ['q','w','e','r','t','y','u','i','o','p'],
+          ['a','s','d','f','g','h','j','k','l'],
+          ['z','x','c','v','b','n','m','，','。','？']
+        ],
+        keyboardShift: [
+          ['1','2','3','4','5','6','7','8','9','0'],
+          ['！','？','、','：','；','“','”','（','）'],
+          ['《','》','—','…','·','～','￥','@','#','%']
+        ]
+      },
+      {
+        id: 'ja',
+        name: 'Japanese',
+        native: '日本語',
+        dir: 'ltr',
+        imeType: 'japanese',
+        imeHint: 'Zero-space Romaji → Kana & Kanji (meanings shown)',
+        placeholder: 'Type Romaji directly without spaces (e.g., "kyouhakafeniikimashita")... Highlight any Kanji to inspect!',
+        sample: '今日は仕事帰りに新しいカフェに寄って、美味しいラテを飲みながらゆっくり本を読みました。',
+        prompts: [
+          {
+            crateCode: 'BLIND BAG • WALL MARIA',
+            crateTag: 'Daily Reflection',
+            native: '今日、ちょっと嬉しかったことやホッとした瞬間は何ですか？',
+            en: 'What moment made you feel a little happy or relieved today?',
+            starter: '今日ちょっと嬉しかったことは、',
+            vocab: [['まったり (mattari)', 'chilling / relaxing'], ['めっちゃ (meccha)', 'super / really (casual)'], ['リフレッシュ (rifuresshu)', 'refreshing'], ['ちなみに (chinamini)', 'by the way']]
+          },
+          {
+            crateCode: 'BLIND BAG • TROST DISTRICT',
+            crateTag: 'Current Obsessions',
+            native: '最近ハマっている食べ物や趣味について書いてみよう！',
+            en: 'Write about a food or hobby you have been hooked on lately!',
+            starter: '最近ハマっているのは、',
+            vocab: [['ハマる (hamaru)', 'to be hooked on'], ['おすすめ (osusume)', 'recommendation'], ['最高 (saikou)', 'the best / awesome'], ['癒される (iyasareru)', 'to feel healed / soothed']]
+          },
+          {
+            crateCode: 'BLIND BAG • BEYOND THE WALLS',
+            crateTag: 'Free Day',
+            native: 'もし明日一日だけ完全に自由だったら、何をしたいですか？',
+            en: 'If you had tomorrow completely free, what would you do?',
+            starter: 'もし明日一日自由だったら、まず',
+            vocab: [['のんびり (nonbiri)', 'leisurely'], ['散歩する (sanpo suru)', 'take a walk'], ['贅沢 (zeitaku)', 'luxury / treat'], ['気分転換 (kibun tenkan)', 'change of pace']]
+          },
+          {
+            crateCode: 'BLIND BAG • RECON MISSION',
+            crateTag: 'Night Routine',
+            native: '寝る前のリラックスタイムに、いつも何をしていますか？',
+            en: 'What do you usually do during your relaxing time before bed?',
+            starter: '夜寝る前は、いつも',
+            vocab: [['落ち着く (ochitsuku)', 'calm down / feel cozy'], ['ついつい (tsuitsui)', 'unintentionally / end up'], ['夜更かし (yofukashi)', 'staying up late'], ['ぐっすり (gussuri)', 'soundly (sleep)']]
+          },
+          {
+            crateCode: 'BLIND BAG • MESS HALL RATION',
+            crateTag: 'Favorite Spot',
+            native: 'あなたにとって「一番落ち着く場所」はどこですか？',
+            en: 'Where is your "most comforting / relaxing place"?',
+            starter: '私にとって一番落ち着く場所は、',
+            vocab: [['お気に入り (okiniiri)', 'favorite'], ['静か (shizuka)', 'quiet'], ['居心地がいい (igokochi ga ii)', 'cozy / comfortable'], ['欠かせない (kakasenai)', 'indispensable']]
+          }
+        ],
+        keyboard: [
+          ['あ','い','う','え','お','か','き','く','け','こ'],
+          ['さ','し','す','せ','そ','た','ち','つ','て','と'],
+          ['な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ'],
+          ['ま','み','む','め','も','や','ゆ','よ','ら','り'],
+          ['る','れ','ろ','わ','を','ん','っ','ー','、','。']
+        ],
+        keyboardShift: [
+          ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ'],
+          ['サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト'],
+          ['ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ'],
+          ['マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ'],
+          ['ル','レ','ロ','ワ','ヲ','ン','ッ','「','」','！']
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 2. PRECISION CHARACTER & WORD DICTIONARY (READINGS + ENGLISH MEANINGS)
+    // =========================================================================
+    const CHAR_DICTIONARY = {
+      '我': { zh: { r: 'wǒ', m: 'I, me, my' }, ja: { r: 'ware / ga', m: 'I, oneself, ego' } },
+      '你': { zh: { r: 'nǐ', m: 'you' } },
+      '您': { zh: { r: 'nín', m: 'you (polite)' } },
+      '他': { zh: { r: 'tā', m: 'he, him' }, ja: { r: 'ta / hoka', m: 'other, another' } },
+      '她': { zh: { r: 'tā', m: 'she, her' } },
+      '们': { zh: { r: 'men', m: 'plural marker for pronouns/people' } },
+      '我们': { zh: { r: 'wǒmen', m: 'we, us' } },
+      '你好': { zh: { r: 'nǐ hǎo', m: 'hello, hi' } },
+      '好': { zh: { r: 'hǎo', m: 'good, well; very' }, ja: { r: 'kō / su(ki)', m: 'fond, good, pleasing' } },
+      '的': { zh: { r: 'de', m: 'possessive / descriptive particle' }, ja: { r: 'teki', m: '-like, -ic (adjectival suffix)' } },
+      '了': { zh: { r: 'le', m: 'completed action / change of state particle' }, ja: { r: 'ryō', m: 'finish, comprehend' } },
+      '是': { zh: { r: 'shì', m: 'to be (am, is, are); yes' }, ja: { r: 'ze', m: 'right, just, this' } },
+      '不': { zh: { r: 'bù', m: 'not, no' }, ja: { r: 'fu / bu', m: 'un-, non-, negative prefix' } },
+      '在': { zh: { r: 'zài', m: 'at, in, on; currently doing' }, ja: { r: 'zai', m: 'exist, located in' } },
+      '有': { zh: { r: 'yǒu', m: 'to have, there is' }, ja: { r: 'yū / a(ru)', m: 'exist, possess' } },
+      '没有': { zh: { r: 'méiyǒu', m: 'do not have, there is not' } },
+      '今': { zh: { r: 'jīn', m: 'now, current, today' }, ja: { r: 'kon / ima', m: 'now, the present' } },
+      '天': { zh: { r: 'tiān', m: 'day, sky, weather' }, ja: { r: 'ten / ame', m: 'heaven, sky' } },
+      '今天': { zh: { r: 'jīntiān', m: 'today' } },
+      '今日': { ja: { r: 'kyō / konnichi', m: 'today, this day' } },
+      '明': { zh: { r: 'míng', m: 'bright, clear, next' }, ja: { r: 'mei / aka(rui)', m: 'bright, clear' } },
+      '明天': { zh: { r: 'míngtiān', m: 'tomorrow' } },
+      '明日': { ja: { r: 'ashita / asu', m: 'tomorrow' } },
+      '昨': { zh: { r: 'zuó', m: 'yesterday, past' }, ja: { r: 'saku', m: 'yesterday, previous' } },
+      '昨天': { zh: { r: 'zuótiān', m: 'yesterday' } },
+      '昨日': { ja: { r: 'kinō / sakujitsu', m: 'yesterday' } },
+      '年': { zh: { r: 'nián', m: 'year' }, ja: { r: 'nen / toshi', m: 'year, age' } },
+      '今年': { zh: { r: 'jīnnián', m: 'this year' }, ja: { r: 'kotoshi / konnen', m: 'this year' } },
+      '下': { zh: { r: 'xià', m: 'down, below, next' }, ja: { r: 'ka / shita', m: 'below, down' } },
+      '午': { zh: { r: 'wǔ', m: 'noon, midday' }, ja: { r: 'go', m: 'noon' } },
+      '下午': { zh: { r: 'xiàwǔ', m: 'afternoon' } },
+      '去': { zh: { r: 'qù', m: 'to go, leave' }, ja: { r: 'kyo / sa(ru)', m: 'depart, past' } },
+      '来': { zh: { r: 'lái', m: 'to come, arrive' }, ja: { r: 'rai / ku(ru)', m: 'come, next' } },
+      '一': { zh: { r: 'yī', m: 'one, a/an' }, ja: { r: 'ichi / hito(tsu)', m: 'one' } },
+      '家': { zh: { r: 'jiā', m: 'home, family; measure word for shops' }, ja: { r: 'ka / ie', m: 'house, family' } },
+      '新': { zh: { r: 'xīn', m: 'new, fresh' }, ja: { r: 'shin / atara(shii)', m: 'new' } },
+      '开': { zh: { r: 'kāi', m: 'to open, start, drive' }, ja: { r: 'kai / a(keru)', m: 'open' } },
+      '咖': { zh: { r: 'kā', m: 'phonetic syllable in coffee (咖啡)' } },
+      '啡': { zh: { r: 'fēi', m: 'phonetic syllable in coffee (咖啡)' } },
+      '咖啡': { zh: { r: 'kāfēi', m: 'coffee' } },
+      '馆': { zh: { r: 'guǎn', m: 'shop, parlor, hall' }, ja: { r: 'kan / yakata', m: 'building, hall' } },
+      '咖啡馆': { zh: { r: 'kāfēiguǎn', m: 'coffee shop, café' } },
+      '环': { zh: { r: 'huán', m: 'ring, surround, environment' } },
+      '境': { zh: { r: 'jìng', m: 'border, condition, environment' }, ja: { r: 'kyō / sakai', m: 'boundary, region' } },
+      '环境': { zh: { r: 'huánjìng', m: 'environment, ambiance, surroundings' }, ja: { r: 'kankyō', m: 'environment' } },
+      '很': { zh: { r: 'hěn', m: 'very, quite' } },
+      '安': { zh: { r: 'ān', m: 'peaceful, safe, calm' }, ja: { r: 'an / yasu(i)', m: 'peaceful, cheap' } },
+      '静': { zh: { r: 'jìng', m: 'quiet, still, silent' }, ja: { r: 'sei / shizu(ka)', m: 'quiet' } },
+      '安静': { zh: { r: 'ānjìng', m: 'quiet, peaceful' } },
+      '也': { zh: { r: 'yě', m: 'also, too' } },
+      '特': { zh: { r: 'tè', m: 'special, particularly' }, ja: { r: 'toku', m: 'special' } },
+      '别': { zh: { r: 'bié', m: 'other, do not; separate' }, ja: { r: 'betsu / waka(reru)', m: 'separate, distinct' } },
+      '特别': { zh: { r: 'tèbié', m: 'especially, particularly, special' }, ja: { r: 'tokubetsu', m: 'special' } },
+      '喝': { zh: { r: 'hē', m: 'to drink' } },
+      '好喝': { zh: { r: 'hǎohē', m: 'tasty / delicious (for drinks)' } },
+      '吃': { zh: { r: 'chī', m: 'to eat' } },
+      '好吃': { zh: { r: 'hǎochī', m: 'delicious, tasty (for food)' } },
+      '看': { zh: { r: 'kàn', m: 'to look, watch, read' }, ja: { r: 'kan / mi(ru)', m: 'watch, look after' } },
+      '想': { zh: { r: 'xiǎng', m: 'to think, want, miss' }, ja: { r: 'sō / omo(u)', m: 'think, imagine' } },
+      '喜欢': { zh: { r: 'xǐhuan', m: 'to like, be fond of' } },
+      '喜': { zh: { r: 'xǐ', m: 'happy, delighted, like' }, ja: { r: 'ki / yoroko(bu)', m: 'rejoice' } },
+      '欢': { zh: { r: 'huān', m: 'joyous, happy, welcome' } },
+      '开心': { zh: { r: 'kāixīn', m: 'happy, joyful' } },
+      '心': { zh: { r: 'xīn', m: 'heart, mind, feeling' }, ja: { r: 'shin / kokoro', m: 'heart, mind, spirit' } },
+      '觉得': { zh: { r: 'juéde', m: 'to feel, think' } },
+      '放松': { zh: { r: 'fàngsōng', m: 'to relax, loosen up' } },
+      '顺便': { zh: { r: 'shùnbiàn', m: 'conveniently, by the way' } },
+      '超级': { zh: { r: 'chāojí', m: 'super, ultra' } },
+      '充电': { zh: { r: 'chōngdiàn', m: 'to charge a battery; recharge energy' } },
+      '朋友': { zh: { r: 'péngyou', m: 'friend' } },
+      '工作': { zh: { r: 'gōngzuò', m: 'work, job' } },
+      '学习': { zh: { r: 'xuéxí', m: 'to study, learn' } },
+      '中文': { zh: { r: 'Zhōngwén', m: 'Chinese language' } },
+      '时候': { zh: { r: 'shíhou', m: 'time, moment, when' } },
+      '时间': { zh: { r: 'shíjiān', m: 'time' }, ja: { r: 'jikan', m: 'time, hours' } },
+      '天气': { zh: { r: 'tiānqì', m: 'weather' }, ja: { r: 'tenki', m: 'weather' } },
+      '什么': { zh: { r: 'shénme', m: 'what' } },
+      '怎么': { zh: { r: 'zěnme', m: 'how, why' } },
+      '因为': { zh: { r: 'yīnwèi', m: 'because' } },
+      '所以': { zh: { r: 'suǒyǐ', m: 'so, therefore' } },
+      '但是': { zh: { r: 'dànshì', m: 'but, however' } },
+      '一起': { zh: { r: 'yīqǐ', m: 'together' } },
+      '小': { zh: { r: 'xiǎo', m: 'small, little' }, ja: { r: 'shō / chii(sai)', m: 'small' } },
+      '大': { zh: { r: 'dà', m: 'big, large' }, ja: { r: 'dai / ō(kii)', m: 'big' } },
+      '事': { zh: { r: 'shì', m: 'matter, thing, affair' }, ja: { r: 'ji / koto', m: 'matter, thing' } },
+      '人': { zh: { r: 'rén', m: 'person, people' }, ja: { r: 'jin / hito', m: 'person' } },
+      '日': { zh: { r: 'rì', m: 'day, sun' }, ja: { r: 'nichi / hi', m: 'day, sun' } },
+      '本': { zh: { r: 'běn', m: 'book, root, origin' }, ja: { r: 'hon / moto', m: 'book, origin' } },
+      '日本': { zh: { r: 'Rìběn', m: 'Japan' }, ja: { r: 'Nihon / Nippon', m: 'Japan' } },
+      '日本語': { ja: { r: 'Nihongo', m: 'Japanese language' } },
+      '語': { zh: { r: 'yǔ (语)', m: 'language, speech' }, ja: { r: 'go / kata(ru)', m: 'word, language' } },
+      '私': { zh: { r: 'sī', m: 'private, personal' }, ja: { r: 'watashi', m: 'I, me' } },
+      '僕': { ja: { r: 'boku', m: 'I, me (casual, typically masculine)' } },
+      '仕': { ja: { r: 'shi / tsuka(eru)', m: 'serve, work' } },
+      '仕事': { ja: { r: 'shigoto', m: 'work, job' } },
+      '帰': { ja: { r: 'ki / kae(ru)', m: 'return home' } },
+      '仕事帰り': { ja: { r: 'shigoto-gaeri', m: 'on the way home from work' } },
+      '新しい': { ja: { r: 'atarashii', m: 'new' } },
+      '寄': { ja: { r: 'ki / yo(ru)', m: 'drop by, stop in' } },
+      '寄って': { ja: { r: 'yotte', m: 'dropping by (te-form of 寄る)' } },
+      '美': { zh: { r: 'měi', m: 'beautiful' }, ja: { r: 'bi / utsuku(shii)', m: 'beautiful' } },
+      '味': { zh: { r: 'wèi', m: 'taste, flavor' }, ja: { r: 'mi / aji', m: 'flavor, taste' } },
+      '美味しい': { ja: { r: 'oishii', m: 'delicious, tasty' } },
+      '飲': { ja: { r: 'in / no(mu)', m: 'drink' } },
+      '飲みながら': { ja: { r: 'nominagara', m: 'while drinking' } },
+      '読': { ja: { r: 'doku / yo(mu)', m: 'read' } },
+      '読みました': { ja: { r: 'yomimashita', m: 'read (polite past tense)' } },
+      '食': { zh: { r: 'shí', m: 'food, eat' }, ja: { r: 'shoku / ta(beru)', m: 'eat, food' } },
+      '食べる': { ja: { r: 'taberu', m: 'to eat' } },
+      '飲む': { ja: { r: 'nomu', m: 'to drink' } },
+      '行': { zh: { r: 'xíng / háng', m: 'go, walk, okay' }, ja: { r: 'kō / i(ku)', m: 'go' } },
+      '行く': { ja: { r: 'iku', m: 'to go' } },
+      '見る': { ja: { r: 'miru', m: 'to see, look, watch' } },
+      '聞': { ja: { r: 'bun / ki(ku)', m: 'hear, ask' } },
+      '聞く': { ja: { r: 'kiku', m: 'to listen, hear, ask' } },
+      '話': { zh: { r: 'huà', m: 'speech, talk, words' }, ja: { r: 'wa / hana(su)', m: 'talk, story' } },
+      '話す': { ja: { r: 'hanasu', m: 'to speak, talk' } },
+      '書': { zh: { r: 'shū', m: 'book, write' }, ja: { r: 'sho / ka(ku)', m: 'write' } },
+      '書く': { ja: { r: 'kaku', m: 'to write' } },
+      '読む': { ja: { r: 'yomu', m: 'to read' } },
+      '好き': { ja: { r: 'suki', m: 'like, fond of' } },
+      '楽': { zh: { r: 'lè / yuè', m: 'happy, music' }, ja: { r: 'raku / tano(shii)', m: 'enjoyable, comfortable' } },
+      '楽しい': { ja: { r: 'tanoshii', m: 'fun, enjoyable' } },
+      '嬉しい': { ja: { r: 'ureshii', m: 'happy, glad' } },
+      '友': { zh: { r: 'yǒu', m: 'friend' }, ja: { r: 'yū / tomo', m: 'friend' } },
+      '友達': { ja: { r: 'tomodachi', m: 'friend' } },
+      '家族': { zh: { r: 'jiāzú', m: 'family, clan' }, ja: { r: 'kazoku', m: 'family' } },
+      '勉強': { zh: { r: 'miǎnqiǎng', m: 'reluctantly' }, ja: { r: 'benkyō', m: 'study' } },
+      '学校': { zh: { r: 'xuéxiào', m: 'school' }, ja: { r: 'gakkō', m: 'school' } },
+      '会社': { ja: { r: 'kaisha', m: 'company, office' } },
+      '天気': { ja: { r: 'tenki', m: 'weather' } },
+      '時間': { ja: { r: 'jikan', m: 'time' } },
+      '休み': { ja: { r: 'yasumi', m: 'rest, holiday, day off' } },
+      '水': { zh: { r: 'shuǐ', m: 'water' }, ja: { r: 'sui / mizu', m: 'water' } },
+      'お茶': { ja: { r: 'ocha', m: 'tea (green tea)' } },
+      'ご飯': { ja: { r: 'gohan', m: 'cooked rice, meal' } },
+      '猫': { zh: { r: 'māo', m: 'cat' }, ja: { r: 'neko', m: 'cat' } },
+      '犬': { zh: { r: 'quǎn', m: 'dog' }, ja: { r: 'inu', m: 'dog' } },
+      '最高': { zh: { r: 'zuìgāo', m: 'highest, supreme' }, ja: { r: 'saikō', m: 'the best, awesome' } },
+      '癒される': { ja: { r: 'iyasareru', m: 'to be healed / comforted' } },
+      '瞬間': { zh: { r: 'shùnjiān', m: 'instant, moment' }, ja: { r: 'shunkan', m: 'moment, instant' } },
+      '何': { zh: { r: 'hé', m: 'what, which' }, ja: { r: 'nani / nan', m: 'what' } },
+      '最近': { zh: { r: 'zuìjìn', m: 'recently, lately' }, ja: { r: 'saikin', m: 'recently, lately' } },
+      '食べ物': { ja: { r: 'tabemono', m: 'food' } },
+      '趣味': { zh: { r: 'qùwèi', m: 'interest, charm' }, ja: { r: 'shumi', m: 'hobby, interest' } }
+    };
+
+    // =========================================================================
+    // 3. PRECISION ZERO-SPACE ROMAJI & PINYIN IME TABLES
+    // =========================================================================
+    const JP_ROMAJI_MAP = {
+      'kya':'きゃ','kyu':'きゅ','kyo':'きょ',
+      'sha':'しゃ','shu':'しゅ','sho':'しょ','sya':'しゃ','syu':'しゅ','syo':'しょ',
+      'cha':'ちゃ','chu':'ちゅ','cho':'ちょ','tya':'ちゃ','tyu':'ちゅ','tyo':'ちょ',
+      'nya':'にゃ','nyu':'にゅ','nyo':'にょ',
+      'hya':'ひゃ','hyu':'ひゅ','hyo':'ひょ',
+      'mya':'みゃ','myu':'みゅ','myo':'みょ',
+      'rya':'りゃ','ryu':'りゅ','ryo':'りょ',
+      'gya':'ぎゃ','gyu':'ぎゅ','gyo':'ぎょ',
+      'ja':'じゃ','ju':'じゅ','jo':'じょ','jya':'じゃ','jyu':'じゅ','jyo':'じょ',
+      'bya':'びゃ','byu':'びゅ','byo':'びょ',
+      'pya':'ぴゃ','pyu':'ぴゅ','pyo':'ぴょ',
+      'shi':'し','chi':'ち','tsu':'つ','fu':'ふ',
+      'ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
+      'sa':'さ','si':'し','su':'す','se':'せ','so':'そ',
+      'ta':'た','ti':'ち','tu':'つ','te':'て','to':'と',
+      'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の',
+      'ha':'は','hi':'ひ','hu':'ふ','he':'へ','ho':'ほ',
+      'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
+      'ya':'や','yu':'ゆ','yo':'よ',
+      'ra':'ら','ri':'り','ru':'る','re':'れ','ro':'ろ',
+      'wa':'わ','wi':'ゐ','we':'ゑ','wo':'を',
+      'ga':'が','gi':'ぎ','gu':'ぐ','ge':'げ','go':'ご',
+      'za':'ざ','zi':'じ','ji':'じ','zu':'ず','ze':'ぜ','zo':'ぞ',
+      'da':'だ','di':'ぢ','du':'づ','de':'で','do':'ど',
+      'ba':'ば','bi':'び','bu':'ぶ','be':'べ','bo':'ぼ',
+      'pa':'ぱ','pi':'ぴ','pu':'ぷ','pe':'ぺ','po':'ぽ',
+      'nn':'ん',"n'":'ん',
+      'a':'あ','i':'い','u':'う','e':'え','o':'お',
+      '-':'ー','.':'。',',':'、'
+    };
+
+    const JP_KANJI_DICT = {
+      'こんにちは': ['今日は', 'こんにちは'],
+      'ありがとう': ['有難う', 'ありがとう'],
+      'きょう': ['今日', '京', '強'],
+      'あした': ['明日'],
+      'きのう': ['昨日'],
+      'わたし': ['私'],
+      'ぼく': ['僕'],
+      'にほん': ['日本'],
+      'にほんご': ['日本語'],
+      'べんきょう': ['勉強'],
+      'がっこう': ['学校'],
+      'かいしゃ': ['会社'],
+      'ともだち': ['友達'],
+      'かぞく': ['家族'],
+      'たべる': ['食べる'],
+      'たべもの': ['食べ物'],
+      'のむ': ['飲む'],
+      'いく': ['行く'],
+      'くる': ['来る'],
+      'みる': ['見る'],
+      'きく': ['聞く'],
+      'はなす': ['話す'],
+      'かく': ['書く'],
+      'よむ': ['読む'],
+      'すき': ['好き'],
+      'たのしい': ['楽しい'],
+      'うれしい': ['嬉しい'],
+      'おいしい': ['美味しい'],
+      'あたらしい': ['新しい'],
+      'てんき': ['天気'],
+      'じかん': ['時間'],
+      'しごと': ['仕事'],
+      'やすみ': ['休み'],
+      'ほん': ['本'],
+      'みず': ['水'],
+      'おちゃ': ['お茶'],
+      'ごはん': ['ご飯'],
+      'ねこ': ['猫'],
+      'いぬ': ['犬'],
+      'さいきん': ['最近'],
+      'しゅみ': ['趣味'],
+      'さいこう': ['最高'],
+      'カフェ': ['カフェ'],
+      'コーヒー': ['コーヒー']
+    };
+
+    const VALID_PINYIN_SYLLABLES = new Set([
+      'a','ai','an','ang','ao',
+      'ba','bai','ban','bang','bao','bei','ben','beng','bi','bian','biao','bie','bin','bing','bo','bu',
+      'ca','cai','can','cang','cao','ce','cei','cen','ceng','cha','chai','chan','chang','chao','che','chen','cheng','chi','chong','chou','chu','chua','chuai','chuan','chuang','chui','chun','chuo','ci','cong','cou','cu','cuan','cui','cun','cuo',
+      'da','dai','dan','dang','dao','de','dei','den','deng','di','dia','dian','diao','die','ding','diu','dong','dou','du','duan','dui','dun','duo',
+      'e','ei','en','eng','er',
+      'fa','fan','fang','fei','fen','feng','fo','fou','fu',
+      'ga','gai','gan','gang','gao','ge','gei','gen','geng','gong','gou','gu','gua','guai','guan','guang','gui','gun','guo',
+      'ha','hai','han','hang','hao','he','hei','hen','heng','hong','hou','hu','hua','huai','huan','huang','hui','hun','huo',
+      'ji','jia','jian','jiang','jiao','jie','jin','jing','jiong','jiu','ju','juan','jue','jun',
+      'ka','kai','kan','kang','kao','ke','kei','ken','keng','kong','kou','ku','kua','kuai','kuan','kuang','kui','kun','kuo',
+      'la','lai','lan','lang','lao','le','lei','leng','li','lia','lian','liang','liao','lie','lin','ling','liu','lo','long','lou','lu','luan','lue','lun','luo','lv','lve',
+      'ma','mai','man','mang','mao','me','mei','men','meng','mi','mian','miao','mie','min','ming','miu','mo','mou','mu',
+      'na','nai','nan','nang','nao','ne','nei','nen','neng','ni','nian','niang','niao','nie','nin','ning','niu','nong','nou','nu','nuan','nue','nun','nuo','nv','nve',
+      'o','ou',
+      'pa','pai','pan','pang','pao','pei','pen','peng','pi','pian','piao','pie','pin','ping','po','pou','pu',
+      'qi','qia','qian','qiang','qiao','qie','qin','qing','qiong','qiu','qu','quan','que','qun',
+      'ran','rang','rao','re','ren','reng','ri','rong','rou','ru','rua','ruan','rui','run','ruo',
+      'sa','sai','san','sang','sao','se','sen','seng','sha','shai','shan','shang','shao','she','shei','shen','sheng','shi','shou','shu','shua','shuai','shuan','shuang','shui','shun','shuo','si','song','sou','su','suan','sui','sun','suo',
+      'ta','tai','tan','tang','tao','te','tei','teng','ti','tian','tiao','tie','ting','tong','tou','tu','tuan','tui','tun','tuo',
+      'wa','wai','wan','wang','wei','wen','weng','wo','wu',
+      'xi','xia','xian','xiang','xiao','xie','xin','xing','xiong','xiu','xu','xuan','xue','xun',
+      'ya','yan','yang','yao','ye','yi','yin','ying','yo','yong','you','yu','yuan','yue','yun',
+      'za','zai','zan','zang','zao','ze','zei','zen','zeng','zha','zhai','zhan','zhang','zhao','zhe','zhei','zhen','zheng','zhi','zhong','zhou','zhu','zhua','zhuai','zhuan','zhuang','zhui','zhun','zhuo','zi','zong','zou','zu','zuan','zui','zun','zuo'
+    ]);
+
+    const ZH_PINYIN_DICT = {
+      'nihao': ['你好', '拟好'],
+      'women': ['我们'],
+      'nimen': ['你们'],
+      'tamen': ['他们', '她们', '它们'],
+      'xiexie': ['谢谢'],
+      'zaijian': ['再见'],
+      'duibuqi': ['对不起'],
+      'meiguanxi': ['没关系'],
+      'meiyou': ['没有'],
+      'jintian': ['今天'],
+      'mingtian': ['明天'],
+      'zuotian': ['昨天'],
+      'xiawu': ['下午'],
+      'shangwu': ['上午'],
+      'xianzai': ['现在'],
+      'shijian': ['时间', '事件'],
+      'tianqi': ['天气'],
+      'kaixin': ['开心'],
+      'gaoxing': ['高兴'],
+      'xihuan': ['喜欢'],
+      'kafei': ['咖啡'],
+      'kafeiguan': ['咖啡馆'],
+      'tingshuo': ['听说'],
+      'xuexi': ['学习'],
+      'zhongwen': ['中文'],
+      'hanyu': ['汉语'],
+      'pengyou': ['朋友'],
+      'jiaren': ['家人'],
+      'gongzuo': ['工作'],
+      'zhoumo': ['周末'],
+      'xiuxi': ['休息'],
+      'yinyue': ['音乐'],
+      'dianying': ['电影'],
+      'shenme': ['什么'],
+      'weishenme': ['为什么'],
+      'zenme': ['怎么'],
+      'zenmeyang': ['怎么样'],
+      'nali': ['哪里', '那里'],
+      'zheli': ['这里'],
+      'keyi': ['可以'],
+      'zhidao': ['知道'],
+      'juede': ['觉得'],
+      'yinwei': ['因为'],
+      'suoyi': ['所以'],
+      'danshi': ['但是'],
+      'erqie': ['而且'],
+      'feichang': ['非常'],
+      'chaoji': ['超级'],
+      'haochi': ['好吃'],
+      'haohe': ['好喝'],
+      'haokan': ['好看'],
+      'haowan': ['好玩'],
+      'shenghuo': ['生活'],
+      'wenti': ['问题'],
+      'yisi': ['意思'],
+      'yidian': ['一点'],
+      'yiqi': ['一起'],
+      'yijing': ['已经'],
+      'haiyou': ['还有'],
+      'ruguo': ['如果'],
+      'suiran': ['虽然'],
+      'keneng': ['可能'],
+      'yinggai': ['应该'],
+      'xuyao': ['需要'],
+      'bangzhu': ['帮助'],
+      'ganxie': ['感谢'],
+      'huanying': ['欢迎'],
+      'jiayou': ['加油'],
+      'kuaile': ['快乐'],
+      'xingfu': ['幸福'],
+      'nuli': ['努力'],
+      'fangsong': ['放松'],
+      'xinqing': ['心情'],
+      'tuijian': ['推荐'],
+      'huanjing': ['环境'],
+      'anjing': ['安静'],
+      'shufu': ['舒服'],
+      'tebie': ['特别'],
+      'shunbian': ['顺便'],
+      'chongdian': ['充电'],
+      'jinnian': ['今年'],
+      'qunian': ['去年'],
+      'mingnian': ['明年'],
+      'meitian': ['每天'],
+      'zhege': ['这个'],
+      'nage': ['那个'],
+      'yihou': ['以后'],
+      'yiqian': ['以前'],
+      'shihou': ['时候'],
+      'difang': ['地方'],
+      'dongxi': ['东西'],
+      'riben': ['日本'],
+      'zhongguo': ['中国'],
+      'meiguo': ['美国'],
+      'beijing': ['北京'],
+      'shanghai': ['上海'],
+      'dongjing': ['东京'],
+      'riyu': ['日语'],
+      'yingyu': ['英语'],
+      'laoshi': ['老师'],
+      'xuesheng': ['学生'],
+      'tongxue': ['同学'],
+      'gongsi': ['公司'],
+      'xuexiao': ['学校'],
+      'yiyuan': ['医院'],
+      'fandian': ['饭店'],
+      'chaoshi': ['超市'],
+      'ditie': ['地铁'],
+      'feiji': ['飞机'],
+      'lvxing': ['旅行'],
+      'youxi': ['游戏'],
+      'yundong': ['运动'],
+      'paobu': ['跑步'],
+      'shuijiao': ['睡觉'],
+      'qichuang': ['起床'],
+      'chifan': ['吃饭'],
+      'heshui': ['喝水'],
+      'hekafei': ['喝咖啡'],
+      'kanshu': ['看书'],
+      'tingyinyue': ['听音乐'],
+      'kandianying': ['看电影'],
+      'liaotian': ['聊天'],
+      'kaishi': ['开始'],
+      'jieshu': ['结束'],
+      'zhunbei': ['准备'],
+      'jueding': ['决定'],
+      'xiwang': ['希望'],
+      'xiangxin': ['相信'],
+      'renshi': ['认识'],
+      'gaosu': ['告诉'],
+      'wangji': ['忘记'],
+      'jide': ['记得'],
+      'mingbai': ['明白'],
+      'dongle': ['懂了'],
+      'haole': ['好了'],
+      'duile': ['对了'],
+      'zhenbang': ['真棒'],
+      'lihai': ['厉害'],
+      'keai': ['可爱'],
+      'piaoliang': ['漂亮'],
+      'shuaiqi': ['帅气'],
+      'congming': ['聪明'],
+      'renzhen': ['认真'],
+      'jiandan': ['简单'],
+      'kunnan': ['困难'],
+      'zhongyao': ['重要'],
+      'youqu': ['有趣'],
+      'wuliao': ['无聊'],
+      'kaixinle': ['开心了'],
+      'leile': ['累了'],
+      'ele': ['饿了'],
+      'kele': ['渴了'],
+      'xinku': ['辛苦'],
+      'jiayouba': ['加油吧'],
+      'meishi': ['没事', '美食'],
+      'buzhidao': ['不知道'],
+      'meibanfa': ['没办法'],
+      'chabuduo': ['差不多'],
+      'yidianer': ['一点儿'],
+      'yixia': ['一下'],
+      'yiwei': ['以为'],
+      'yibian': ['一边'],
+      'yizhi': ['一直'],
+      'zuihou': ['最后'],
+      'zuijin': ['最近'],
+      'mashang': ['马上'],
+      'like': ['立刻'],
+      'turan': ['突然'],
+      'guoran': ['果然'],
+      'qishi': ['其实'],
+      'yuanlai': ['原来'],
+      'benlai': ['本来'],
+      'dangran': ['当然'],
+      'bidui': ['不对'],
+      'buxing': ['不行'],
+      'bucuo': ['不错'],
+      'henhao': ['很好'],
+      'taihaole': ['太好了'],
+      'zhende': ['真的'],
+      'jiade': ['假的'],
+      'kending': ['肯定'],
+      'yiding': ['一定'],
+      'bixu': ['必须'],
+      'haoxiang': ['好像'],
+      'ganjue': ['感觉'],
+      'xiangfa': ['想法'],
+      'jihua': ['计划'],
+      'mubiao': ['目标'],
+      'mengxiang': ['梦想'],
+      'chenggong': ['成功'],
+      'shibai': ['失败'],
+      'jihui': ['机会'],
+      'jingyan': ['经验'],
+      'xiguan': ['习惯'],
+      'wenhua': ['文化'],
+      'lishi': ['历史'],
+      'shijie': ['世界'],
+      'guojia': ['国家'],
+      'chengshi': ['城市'],
+      'fengjing': ['风景'],
+      'tiankong': ['天空'],
+      'taiyang': ['太阳'],
+      'yueliang': ['月亮'],
+      'xingxing': ['星星'],
+      'xiazai': ['下载'],
+      'shouji': ['手机'],
+      'diannao': ['电脑'],
+      'wangluo': ['网络'],
+      'shipin': ['视频'],
+      'zhaopian': ['照片'],
+      'weixin': ['微信'],
+      'a': ['啊', '阿'], 'ai': ['爱', '矮', '哎'], 'an': ['安', '按', '暗'],
+      'ba': ['吧', '把', '爸', '八'], 'bai': ['白', '百', '拜'], 'ban': ['半', '班', '办', '板'],
+      'bang': ['帮', '棒', '傍'], 'bao': ['包', '报', '抱', '宝'], 'bei': ['被', '北', '杯', '背'],
+      'ben': ['本', '奔'], 'bi': ['比', '笔', '必', '毕'], 'bian': ['边', '变', '便', '遍'],
+      'biao': ['表', '标'], 'bie': ['别'], 'bing': ['并', '病', '冰'], 'bu': ['不', '步', '部', '布'],
+      'cai': ['才', '菜', '猜'], 'can': ['参', '餐'], 'cao': ['草', '操'], 'ce': ['测', '册'],
+      'cha': ['茶', '查', '差'], 'chan': ['产'], 'chang': ['长', '常', '场', '唱'],
+      'chao': ['超', '吵', '朝'], 'che': ['车', '彻'], 'chen': ['趁', '晨'],
+      'cheng': ['成', '城', '程'], 'chi': ['吃', '迟', '持'], 'chong': ['冲', '重', '充'],
+      'chou': ['抽', '臭'], 'chu': ['出', '初', '除', '处'], 'chuan': ['穿', '船', '传'],
+      'chuang': ['窗', '床', '创'], 'chun': ['春', '纯'], 'ci': ['次', '词', '此'],
+      'cong': ['从', '聪'], 'cuo': ['错'], 'da': ['大', '打', '达'], 'dai': ['带', '待', '代', '戴'],
+      'dan': ['但', '单', '蛋', '担'], 'dang': ['当', '党'], 'dao': ['到', '道', '倒', '导'],
+      'de': ['的', '得', '地'], 'deng': ['等', '灯'], 'di': ['地', '第', '低', '底', '弟'],
+      'dian': ['点', '电', '店'], 'diao': ['掉', '调'], 'die': ['爹', '跌'], 'ding': ['定', '订', '顶'],
+      'dong': ['东', '懂', '动', '冬'], 'dou': ['都', '豆', '逗'], 'du': ['读', '度', '都', '独'],
+      'duan': ['短', '段', '断'], 'dui': ['对', '队'], 'dun': ['顿', '炖'], 'duo': ['多', '朵', '躲'],
+      'e': ['饿', '恶', '鹅'], 'en': ['嗯', '恩'], 'er': ['而', '二', '儿', '耳'],
+      'fa': ['发', '法'], 'fan': ['饭', '翻', '烦', '反'], 'fang': ['放', '方', '房', '防'],
+      'fei': ['飞', '非', '费'], 'fen': ['分', '份', '粉'], 'feng': ['风', '封', '疯'],
+      'fu': ['服', '福', '副', '付', '父'], 'gai': ['该', '改', '盖'], 'gan': ['感', '敢', '干', '赶'],
+      'gang': ['刚', '钢', '港'], 'gao': ['高', '告', '搞'], 'ge': ['个', '歌', '哥', '各', '格'],
+      'gei': ['给'], 'gen': ['跟', '根'], 'geng': ['更'], 'gong': ['工', '公', '共', '功'],
+      'gou': ['够', '狗', '购'], 'gu': ['古', '故', '顾', '鼓'], 'gua': ['挂', '刮', '瓜'],
+      'guai': ['怪', '乖'], 'guan': ['关', '管', '馆', '观'], 'guang': ['光', '广', '逛'],
+      'gui': ['贵', '规', '鬼'], 'guo': ['过', '国', '果', '锅'], 'hai': ['还', '海', '孩', '害'],
+      'han': ['汉', '喊', '寒', '含'], 'hang': ['行', '航'], 'hao': ['好', '号', '毫', '豪'],
+      'he': ['和', '喝', '河', '合', '盒'], 'hei': ['黑', '嘿'], 'hen': ['很', '恨'],
+      'hong': ['红', '哄'], 'hou': ['后', '候', '厚'], 'hu': ['湖', '护', '互', '乎'],
+      'hua': ['话', '花', '画', '化', '滑'], 'huai': ['坏', '怀'], 'huan': ['换', '还', '欢', '环'],
+      'huang': ['黄', '慌', '皇'], 'hui': ['会', '回', '灰', '惠'], 'hun': ['婚', '混'],
+      'huo': ['活', '火', '或', '货'], 'ji': ['几', '机', '记', '及', '急', '寄'],
+      'jia': ['家', '加', '假', '价'], 'jian': ['见', '间', '件', '简', '建'],
+      'jiang': ['讲', '江', '奖', '将'], 'jiao': ['叫', '教', '交', '觉', '脚'],
+      'jie': ['接', '姐', '街', '结', '解', '借'], 'jin': ['进', '今', '近', '金', '紧'],
+      'jing': ['经', '京', '静', '净', '惊'], 'jiu': ['就', '九', '酒', '久', '旧'],
+      'ju': ['句', '局', '举', '具'], 'jue': ['觉', '决', '绝'], 'jun': ['军', '均'],
+      'ka': ['卡', '咖'], 'kai': ['开'], 'kan': ['看', '砍'], 'kao': ['考', '靠', '烤'],
+      'ke': ['可', '课', '客', '刻', '渴'], 'ken': ['肯'], 'kong': ['空', '恐', '控'],
+      'kou': ['口', '扣'], 'ku': ['哭', '苦', '库', '酷'], 'kuai': ['快', '块'],
+      'kuan': ['宽', '款'], 'kuang': ['况', '矿', '狂'], 'kui': ['亏', '愧'], 'kun': ['困'],
+      'kuo': ['扩', '阔'], 'la': ['啦', '拉', '辣'], 'lai': ['来', '赖'], 'lan': ['蓝', '懒', '烂', '篮'],
+      'lang': ['浪', '狼', '朗'], 'lao': ['老', '劳', '佬'], 'le': ['了', '乐'],
+      'lei': ['累', '类', '泪'], 'leng': ['冷'], 'li': ['里', '离', '力', '理', '礼', '立'],
+      'lian': ['连', '脸', '练', '联'], 'liang': ['两', '亮', '凉', '辆'], 'liao': ['聊', '了', '料'],
+      'lie': ['列', '烈'], 'lin': ['林', '临', '邻'], 'ling': ['零', '灵', '领', '另'],
+      'liu': ['六', '留', '流', '刘'], 'long': ['龙', '笼'], 'lou': ['楼', '漏'],
+      'lu': ['路', '录', '陆', '露'], 'luan': ['乱'], 'lun': ['论', '轮'], 'luo': ['落', '罗'],
+      'lv': ['绿', '旅', '律'], 'ma': ['吗', '妈', '马', '嘛', '骂'], 'mai': ['买', '卖', '麦'],
+      'man': ['慢', '满', '曼'], 'mang': ['忙', '盲'], 'mao': ['猫', '毛', '帽', '冒'],
+      'me': ['么'], 'mei': ['没', '每', '美', '妹'], 'men': ['们', '门'], 'meng': ['梦', '猛'],
+      'mi': ['米', '迷', '密', '秘'], 'mian': ['面', '免', '棉'], 'miao': ['秒', '妙', '描'],
+      'min': ['民', '敏'], 'ming': ['明', '名', '命'], 'mo': ['摸', '末', '莫', '磨'],
+      'mou': ['某'], 'mu': ['母', '目', '木', '幕'], 'na': ['那', '拿', '哪', '呐'],
+      'nai': ['奶', '耐'], 'nan': ['南', '难', '男'], 'nao': ['脑', '闹'], 'ne': ['呢'],
+      'nei': ['内', '那'], 'neng': ['能'], 'ni': ['你', '呢', '泥', '拟', '逆'],
+      'nian': ['年', '念', '粘'], 'niang': ['娘', '酿'], 'niao': ['鸟', '尿'], 'nin': ['您'],
+      'niu': ['牛', '扭'], 'nong': ['弄', '农', '浓'], 'nu': ['努', '怒'], 'nuan': ['暖'],
+      'nv': ['女'], 'o': ['哦', '噢'], 'ou': ['偶', '欧'], 'pa': ['怕', '爬', '趴'],
+      'pai': ['拍', '排', '派'], 'pan': ['盘', '盼', '判'], 'pang': ['旁', '胖'],
+      'pao': ['跑', '泡', '炮'], 'pei': ['陪', '配', '赔'], 'peng': ['朋', '碰', '捧'],
+      'pi': ['皮', '批', '啤', '脾'], 'pian': ['片', '便', '偏', '骗'], 'piao': ['票', '漂'],
+      'pin': ['品', '拼', '贫'], 'ping': ['平', '瓶', '评', '凭'], 'po': ['破', '婆', '迫'],
+      'pu': ['普', '铺', '葡'], 'qi': ['起', '七', '气', '期', '奇', '骑'],
+      'qian': ['前', '钱', '千', '签', '浅'], 'qiang': ['强', '墙', '抢'], 'qiao': ['桥', '巧', '敲', '瞧'],
+      'qie': ['且', '切'], 'qin': ['亲', '勤', '琴'], 'qing': ['请', '清', '情', '晴', '轻'],
+      'qiong': ['穷'], 'qiu': ['秋', '球', '求'], 'qu': ['去', '区', '趣', '取'],
+      'quan': ['全', '圈', '劝', '权'], 'que': ['却', '缺', '确'], 'qun': ['群', '裙'],
+      'ran': ['然', '燃', '染'], 'rang': ['让'], 're': ['热'], 'ren': ['人', '认', '任', '忍'],
+      'reng': ['扔', '仍'], 'ri': ['日'], 'rong': ['容', '融'], 'rou': ['肉', '柔'],
+      'ru': ['如', '入', '乳'], 'ruan': ['软'], 'run': ['润'], 'ruo': ['若', '弱'],
+      'san': ['三', '散', '伞'], 'sao': ['扫', '嫂'], 'se': ['色'], 'sen': ['森'],
+      'sha': ['沙', '傻', '杀'], 'shan': ['山', '衫', '善', '闪'], 'shang': ['上', '商', '伤', '赏'],
+      'shao': ['少', '烧', '绍'], 'she': ['社', '设', '舍', '蛇'], 'shei': ['谁'],
+      'shen': ['什', '深', '身', '神', '审'], 'sheng': ['生', '声', '省', '胜', '剩'],
+      'shi': ['是', '时', '事', '十', '市', '试', '师', '实', '识'], 'shou': ['手', '受', '收', '瘦', '首'],
+      'shu': ['书', '树', '输', '数', '熟', '叔'], 'shua': ['刷', '耍'], 'shuai': ['帅', '摔'],
+      'shuang': ['双', '爽'], 'shui': ['水', '谁', '睡'], 'shun': ['顺'], 'shuo': ['说'],
+      'si': ['四', '思', '死', '司', '似'], 'song': ['送', '松', '宋'], 'su': ['诉', '速', '素', '苏'],
+      'suan': ['算', '酸'], 'sui': ['岁', '虽', '随', '碎'], 'sun': ['孙', '损'],
+      'suo': ['所', '锁', '缩'], 'ta': ['他', '她', '它', '踏', '塔'], 'tai': ['太', '台', '态', '抬'],
+      'tan': ['谈', '弹', '探', '叹'], 'tang': ['糖', '汤', '躺', '堂'], 'tao': ['套', '逃', '讨', '桃'],
+      'te': ['特'], 'teng': ['疼', '腾'], 'ti': ['提', '题', '体', '替', '踢'],
+      'tian': ['天', '田', '甜', '填'], 'tiao': ['条', '跳', '挑', '调'], 'tie': ['铁', '贴'],
+      'ting': ['听', '停', '挺', '厅'], 'tong': ['同', '通', '痛', '统'], 'tou': ['头', '偷', '投', '透'],
+      'tu': ['图', '土', '突', '吐'], 'tuan': ['团'], 'tui': ['推', '腿', '退'],
+      'tuo': ['脱', '拖', '托'], 'wa': ['哇', '挖', '瓦'], 'wai': ['外', '歪'],
+      'wan': ['完', '晚', '玩', '万', '碗'], 'wang': ['忘', '望', '王', '网', '往'],
+      'wei': ['为', '位', '喂', '味', '未', '微', '围'], 'wen': ['问', '文', '闻', '温', '稳'],
+      'wo': ['我', '握', '窝', '卧'], 'wu': ['无', '五', '物', '午', '屋', '误'],
+      'xi': ['西', '喜', '洗', '习', '细', '息'], 'xia': ['下', '夏', '吓', '瞎'],
+      'xian': ['先', '现', '线', '显', '鲜', '闲'], 'xiang': ['想', '向', '象', '像', '香', '响'],
+      'xiao': ['小', '笑', '校', '消', '效'], 'xie': ['写', '些', '谢', '鞋', '血'],
+      'xin': ['新', '心', '信', '辛'], 'xing': ['行', '星', '兴', '姓', '醒', '性'],
+      'xiong': ['兄', '胸', '熊'], 'xiu': ['休', '修', '秀'], 'xu': ['需', '许', '续', '虚'],
+      'xuan': ['选', '宣', '悬'], 'xue': ['学', '雪', '血'], 'xun': ['寻', '训', '迅'],
+      'ya': ['呀', '压', '牙', '鸭', '亚'], 'yan': ['眼', '言', '演', '严', '研', '盐', '颜'],
+      'yang': ['样', '阳', '养', '洋', '羊'], 'yao': ['要', '药', '摇', '咬', '邀'],
+      'ye': ['也', '夜', '业', '叶', '爷'], 'yi': ['一', '以', '已', '意', '医', '衣', '易', '疑'],
+      'yin': ['因', '音', '银', '引', '印'], 'ying': ['应', '影', '英', '迎', '赢', '硬'],
+      'yong': ['用', '永', '泳', '勇'], 'you': ['有', '又', '友', '右', '游', '由', '油'],
+      'yu': ['与', '于', '雨', '鱼', '语', '遇', '预'], 'yuan': ['远', '元', '原', '愿', '院', '圆'],
+      'yue': ['月', '越', '约', '阅'], 'yun': ['云', '运', '允许'], 'za': ['杂', '咱'],
+      'zai': ['在', '再', '载'], 'zan': ['咱', '赞', '暂'], 'zang': ['脏', '葬'],
+      'zao': ['早', '造', '糟', '澡'], 'ze': ['责', '则', '择'], 'zen': ['怎'],
+      'zeng': ['增', '赠'], 'zha': ['炸', '扎', '渣'], 'zhai': ['窄', '摘', '债'],
+      'zhan': ['站', '占', '战', '展'], 'zhang': ['张', '长', '章', '涨', '账'],
+      'zhao': ['找', '照', '着', '招'], 'zhe': ['这', '着', '者', '折'],
+      'zhen': ['真', '阵', '镇', '针'], 'zheng': ['正', '整', '证', '争', '政'],
+      'zhi': ['知', '只', '之', '直', '指', '纸', '值', '制'], 'zhong': ['中', '种', '重', '钟', '终'],
+      'zhou': ['周', '洲', '粥'], 'zhu': ['住', '主', '注', '助', '猪', '煮'],
+      'zhuan': ['转', '专', '赚'], 'zhuang': ['装', '撞', '状'], 'zhui': ['追'],
+      'zhun': ['准'], 'zhuo': ['桌', '捉'], 'zi': ['字', '自', '子', '紫', '资'],
+      'zong': ['总', '宗', '纵'], 'zou': ['走', '奏'], 'zu': ['组', '足', '租', '族', '祖'],
+      'zuan': ['钻'], 'zui': ['最', '嘴', '醉'], 'zun': ['尊'], 'zuo': ['做', '作', '坐', '左', '昨', '座']
+    };
+
+    function segmentPinyin(input) {
+      const s = input.toLowerCase().replace(/[^a-z']/g, '');
+      if (!s) return [];
+      const n = s.length;
+      const dp = Array.from({ length: n + 1 }, () => ({ score: -Infinity, prev: -1, syl: '' }));
+      dp[0].score = 0;
+
+      for (let i = 0; i < n; i++) {
+        if (dp[i].score === -Infinity) continue;
+        if (s[i] === "'") {
+          if (dp[i].score + 2 > dp[i + 1].score) {
+            dp[i + 1] = { score: dp[i].score + 2, prev: i, syl: '' };
+          }
+          continue;
+        }
+        let matchedAny = false;
+        for (let len = 1; len <= Math.min(6, n - i); len++) {
+          const sub = s.slice(i, i + len);
+          if (sub.includes("'")) break;
+          if (VALID_PINYIN_SYLLABLES.has(sub)) {
+            matchedAny = true;
+            let stepScore = len * 10 + (ZH_PINYIN_DICT[sub] ? 4 : 0);
+            if (len === 1 && i > 0 && s[i - 1] !== "'") {
+              stepScore -= 8;
+            }
+            if (dp[i].score + stepScore > dp[i + len].score) {
+              dp[i + len] = { score: dp[i].score + stepScore, prev: i, syl: sub };
+            }
+          }
+        }
+        if (!matchedAny || i > 0) {
+          const rem = s.slice(i);
+          if (rem.length <= 5 && !rem.includes("'")) {
+            const isPrefixOfValid = Array.from(VALID_PINYIN_SYLLABLES).some(v => v.startsWith(rem));
+            if (isPrefixOfValid) {
+              const tailScore = dp[i].score + rem.length * 2 - 3;
+              if (tailScore > dp[n].score) {
+                dp[n] = { score: tailScore, prev: i, syl: rem, incomplete: true };
+              }
+            }
+          }
+        }
+      }
+
+      if (dp[n].score === -Infinity) {
+        return [{ text: s, complete: false }];
+      }
+
+      const result = [];
+      let cur = n;
+      while (cur > 0) {
+        const node = dp[cur];
+        if (node.syl) {
+          result.unshift({ text: node.syl, complete: !node.incomplete });
+        }
+        cur = node.prev;
+      }
+      return result;
+    }
+
+    function decodePinyinPhraseCandidates(rawBuf) {
+      const clean = rawBuf.toLowerCase().replace(/[^a-z']/g, '');
+      if (!clean) return [];
+
+      const segs = segmentPinyin(clean);
+      const completeSyls = segs.filter(s => s.complete).map(s => s.text);
+      const hasIncompleteTail = segs.length > 0 && !segs[segs.length - 1].complete;
+
+      const exactKey = clean.replace(/'/g, '');
+      const candidates = [];
+      const addCandidate = (text, consumedSylCount = completeSyls.length) => {
+        if (!text) return;
+        if (!candidates.some(c => c.text === text)) {
+          candidates.push({ text, consumedSylCount });
+        }
+      };
+
+      if (ZH_PINYIN_DICT[exactKey]) {
+        ZH_PINYIN_DICT[exactKey].forEach(w => addCandidate(w, completeSyls.length));
+      }
+
+      if (completeSyls.length >= 2) {
+        const m = completeSyls.length;
+        const beam = Array.from({ length: m + 1 }, () => []);
+        beam[0] = [{ text: '', score: 0 }];
+
+        for (let i = 0; i < m; i++) {
+          if (!beam[i].length) continue;
+          for (let span = Math.min(4, m - i); span >= 1; span--) {
+            const chunkKey = completeSyls.slice(i, i + span).join('');
+            const dictHits = ZH_PINYIN_DICT[chunkKey];
+            if (dictHits && dictHits.length) {
+              const wordBonus = span === 1 ? 10 : span * 28;
+              const topChoices = span >= 2 ? dictHits.slice(0, 3) : dictHits.slice(0, 2);
+              for (const prevItem of beam[i]) {
+                topChoices.forEach((word, rankIdx) => {
+                  beam[i + span].push({
+                    text: prevItem.text + word,
+                    score: prevItem.score + wordBonus - rankIdx * 2
+                  });
+                });
+              }
+            }
+          }
+          for (let k = i + 1; k <= m; k++) {
+            if (beam[k].length > 6) {
+              beam[k].sort((a, b) => b.score - a.score);
+              beam[k] = beam[k].slice(0, 6);
+            }
+          }
+        }
+
+        if (beam[m].length) {
+          beam[m].sort((a, b) => b.score - a.score);
+          beam[m].slice(0, 5).forEach(item => addCandidate(item.text, m));
+        }
+
+        for (let prefixSpan = Math.min(3, m - 1); prefixSpan >= 1; prefixSpan--) {
+          const pKey = completeSyls.slice(0, prefixSpan).join('');
+          if (ZH_PINYIN_DICT[pKey]) {
+            ZH_PINYIN_DICT[pKey].slice(0, 2).forEach(w => addCandidate(w, prefixSpan));
+          }
+        }
+      } else if (completeSyls.length === 1) {
+        const single = completeSyls[0];
+        if (ZH_PINYIN_DICT[single]) {
+          ZH_PINYIN_DICT[single].slice(0, 8).forEach(w => addCandidate(w, 1));
+        }
+      }
+
+      if (candidates.length < 6 || hasIncompleteTail) {
+        const prefixMatches = Object.keys(ZH_PINYIN_DICT)
+          .filter(k => k.startsWith(exactKey) && k !== exactKey)
+          .sort((a, b) => a.length - b.length)
+          .slice(0, 5);
+        prefixMatches.forEach(k => {
+          ZH_PINYIN_DICT[k].slice(0, 2).forEach(w => addCandidate(w, completeSyls.length));
+        });
+      }
+
+      return candidates.slice(0, 9);
+    }
+
+    // =========================================================================
+    // 4. APP STATE, MILESTONES, THEMES & PERSISTENCE
+    // =========================================================================
+    const STORAGE_KEY = 'linguaflow_zh_ja_v2';
+
+    const MOTIVATORS = [
+      'Write freely—just 3 sentences a day builds real fluency.',
+      'Consistency beats perfection every single day.',
+      'Highlight or tap any unknown character to reveal its reading and meaning.',
+      'A 5-minute daily habit compounds into real conversational confidence.'
+    ];
+
+    const MILESTONES = [
+      { days: 3, title: '3-Day Cadet', reward: 'Unlocks Wall Maria Parchment theme', icon: '🛡️' },
+      { days: 7, title: '7-Day Scout', reward: 'Unlocks Garrison Crimson theme', icon: '⚔️' },
+      { days: 14, title: '14-Day Squad Leader', reward: 'Unlocks Military Police Gold theme', icon: '🎖️' },
+      { days: 30, title: '30-Day Commander', reward: 'Unlocks Coordinate Paths theme', icon: '🌌' }
+    ];
+
+    const THEMES = [
+      { id: 'survey', name: 'Survey Corps (Wings)', className: '', swatch: '#1c2420', minStreak: 0 },
+      { id: 'paradis', name: 'Wall Maria Parchment', className: 'theme-paradis', swatch: '#efe6d5', minStreak: 3 },
+      { id: 'garrison', name: 'Garrison Crimson', className: 'theme-garrison', swatch: '#291c1c', minStreak: 7 },
+      { id: 'mp', name: 'Military Police Gold', className: 'theme-mp', swatch: '#202921', minStreak: 14 },
+      { id: 'paths', name: 'Coordinate Paths', className: 'theme-paths', swatch: '#121b2e', minStreak: 30 }
+    ];
+
+    let state = {
+      langId: 'zh',
+      streak: 1,
+      lastWriteDate: null,
+      totalWords: 0,
+      theme: 'survey',
+      instantScript: true,
+      liveCoach: false,
+      vkVisible: true,
+      vkShift: false,
+      freeWrite: false,
+      promptIdx: 0,
+      quoteIdx: 0,
+      cratePool: [0, 1, 2],
+      openedCrateSlot: null,
+      pinyinBuffer: '',
+      inspectorText: '',
+      reminder: { enabled: false, time: '20:00', notifiedToday: null },
+      entries: []
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const validLang = parsed.langId === 'ja' ? 'ja' : 'zh';
+          state = {
+            ...state,
+            ...parsed,
+            langId: validLang,
+            pinyinBuffer: '',
+            vkShift: false,
+            reminder: { ...state.reminder, ...(parsed.reminder || {}) },
+            entries: Array.isArray(parsed.entries) ? parsed.entries : []
+          };
+        }
+      } catch (e) {
+        console.warn('Could not load saved state:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        const toSave = {
+          langId: state.langId,
+          streak: state.streak,
+          lastWriteDate: state.lastWriteDate,
+          totalWords: state.totalWords,
+          theme: state.theme,
+          instantScript: state.instantScript,
+          reminder: state.reminder,
+          entries: state.entries
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      } catch (e) {
+        console.warn('Could not save state:', e);
+      }
+    }
+
+    // =========================================================================
+    // 5. DOM REFERENCES & CORE HELPERS
+    // =========================================================================
+    const elEditor = document.getElementById('writing-editor');
+    const elVkSection = document.getElementById('virtual-keyboard-section');
+    const elVkRows = document.getElementById('vk-rows');
+    const elVkTitle = document.getElementById('vk-title');
+    const elImeBadge = document.getElementById('ime-mode-badge');
+    const elCandidateBar = document.getElementById('ime-candidate-bar');
+    const elBufferDisplay = document.getElementById('ime-buffer-display');
+    const elCandidatesList = document.getElementById('ime-candidates-list');
+    const elInspectorCard = document.getElementById('char-inspector-card');
+
+    function getCurrentLang() {
+      return LANGUAGES.find(l => l.id === state.langId) || LANGUAGES[0];
+    }
+
+    function showToast(message, icon = '✨') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = 'card-surface border border-amber-500/40 shadow-lg rounded-xl px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center gap-2 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0';
+      el.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+      container.appendChild(el);
+      requestAnimationFrame(() => el.classList.remove('translate-y-2', 'opacity-0'));
+      setTimeout(() => {
+        el.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => el.remove(), 300);
+      }, 3200);
+    }
+
+    function insertAtCursor(text) {
+      const start = elEditor.selectionStart;
+      const end = elEditor.selectionEnd;
+      const val = elEditor.value;
+      elEditor.value = val.slice(0, start) + text + val.slice(end);
+      const nextPos = start + text.length;
+      elEditor.setSelectionRange(nextPos, nextPos);
+      elEditor.focus();
+      onEditorContentUpdated();
+    }
+
+    // =========================================================================
+    // 5B. CHARACTER & WORD MEANING INSPECTOR
+    // =========================================================================
+    function lookupCharacterMeaning(token, langId = state.langId) {
+      const clean = (token || '').trim();
+      if (!clean) return null;
+
+      if (CHAR_DICTIONARY[clean]) {
+        const entry = CHAR_DICTIONARY[clean][langId] || CHAR_DICTIONARY[clean].zh || CHAR_DICTIONARY[clean].ja;
+        if (entry) {
+          return { text: clean, reading: entry.r, meaning: entry.m, parts: [] };
+        }
+      }
+
+      const chars = Array.from(clean);
+      const parts = chars.map(ch => {
+        const d = CHAR_DICTIONARY[ch];
+        const info = d ? (d[langId] || d.zh || d.ja) : null;
+        return {
+          char: ch,
+          reading: info ? info.r : '—',
+          meaning: info ? info.m : 'Context-dependent character'
+        };
+      });
+
+      if (chars.length === 1) {
+        return {
+          text: clean,
+          reading: parts[0].reading,
+          meaning: parts[0].meaning,
+          parts: []
+        };
+      }
+
+      return {
+        text: clean,
+        reading: parts.map(p => p.reading).filter(r => r !== '—').join(' ') || 'Compound',
+        meaning: parts.map(p => `${p.char}: ${p.meaning}`).join(' • '),
+        parts
+      };
+    }
+
+    function wrapInspectableCharacters(text) {
+      return text.replace(/([\u4e00-\u9fff\u3040-\u30ff]+)/g, (match) => {
+        return `<span class="char-lookup" data-lookup="${match}" title="Click to inspect reading & meaning">${match}</span>`;
+      });
+    }
+
+    function inspectCharacterToken(token, rect) {
+      const clean = (token || '').trim();
+      if (!clean || !/[\u4e00-\u9fff\u3040-\u30ff]/.test(clean)) return;
+
+      const info = lookupCharacterMeaning(clean, state.langId);
+      if (!info) return;
+
+      state.inspectorText = clean;
+      document.getElementById('inspector-char').textContent = info.text;
+      document.getElementById('inspector-reading').textContent = info.reading;
+      document.getElementById('inspector-meaning').textContent = info.meaning;
+      document.getElementById('inspector-lang-tag').textContent = state.langId === 'ja' ? 'Japanese Lookup' : 'Mandarin Lookup';
+
+      const breakdownEl = document.getElementById('inspector-breakdown');
+      if (info.parts && info.parts.length > 1) {
+        breakdownEl.innerHTML = info.parts.map(p =>
+          `<div class="flex justify-between gap-2"><span class="font-bold text-current">${p.char} (${p.reading})</span><span class="truncate">${p.meaning}</span></div>`
+        ).join('');
+        breakdownEl.classList.remove('hidden');
+      } else {
+        breakdownEl.classList.add('hidden');
+      }
+
+      elInspectorCard.classList.remove('hidden');
+      const cardW = 288;
+      const left = Math.min(window.innerWidth - cardW - 16, Math.max(16, (rect ? rect.left : 80)));
+      const top = rect
+        ? (rect.bottom + 140 > window.innerHeight ? Math.max(16, rect.top - 145) : rect.bottom + 8)
+        : 140;
+      elInspectorCard.style.left = `${left}px`;
+      elInspectorCard.style.top = `${top}px`;
+    }
+
+    function updateDraftReaderStrip() {
+      const bar = document.getElementById('draft-reader-bar');
+      const tokensContainer = document.getElementById('draft-reader-tokens');
+      if (!bar || !tokensContainer) return;
+
+      const matches = (elEditor.value || '').match(/[\u4e00-\u9fff]+/g);
+      if (!matches || matches.length === 0) {
+        bar.classList.add('hidden');
+        return;
+      }
+
+      const uniqueChars = [...new Set(Array.from(matches.join('')))].slice(0, 28);
+      bar.classList.remove('hidden');
+      tokensContainer.innerHTML = uniqueChars.map(ch =>
+        `<button type="button" class="char-lookup px-1.5 py-0.5 rounded subtle-surface border border-transparent hover:border-amber-500/50 text-sm font-medium" data-lookup="${ch}">${ch}</button>`
+      ).join('');
+    }
+
+    // =========================================================================
+    // 6. LANGUAGE SWITCHING, MYSTERY BLIND BAGS, AOT QUOTES & VIRTUAL KEYBOARD
+    // =========================================================================
+    function renderAoTQuotes() {
+      const q = AOT_QUOTES[state.quoteIdx % AOT_QUOTES.length];
+      const nativeLine = state.langId === 'ja' ? q.ja : q.zh;
+
+      const topEl = document.getElementById('pinned-top-quote');
+      if (topEl) {
+        topEl.innerHTML = `<span class="font-bold text-amber-300">${nativeLine}</span> — ${q.en} <span class="text-muted">— ${q.speaker}</span>`;
+      }
+
+      const pillarSpeaker = document.getElementById('pillar-speaker-badge');
+      const pillarNative = document.getElementById('pillar-quote-native');
+      const pillarEn = document.getElementById('pillar-quote-en');
+      if (pillarSpeaker && pillarNative && pillarEn) {
+        pillarSpeaker.textContent = q.speaker;
+        pillarNative.innerHTML = wrapInspectableCharacters(nativeLine);
+        pillarEn.textContent = q.en;
+      }
+
+      const gateNative = document.getElementById('gate-quote-native');
+      const gateSub = document.getElementById('gate-quote-sub');
+      if (gateNative && gateSub) {
+        gateNative.textContent = `${nativeLine} — ${q.speaker}`;
+        gateSub.textContent = `${q.en} Tear open one of the 3 lucky blind bags below to reveal today's writing topic.`;
+      }
+    }
+
+    function rollThreeMysteryCrates() {
+      const lang = getCurrentLang();
+      const indices = lang.prompts.map((_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      state.cratePool = indices.slice(0, 3);
+      state.openedCrateSlot = null;
+      document.getElementById('crate-revealed-panel').classList.add('hidden');
+      renderMysteryCrates();
+    }
+
+    function renderMysteryCrates() {
+      const lang = getCurrentLang();
+      const grid = document.getElementById('mystery-crates-grid');
+      if (!grid) return;
+
+      document.querySelectorAll('.gate-lang-btn').forEach(btn => {
+        const isActive = btn.dataset.gateLang === state.langId;
+        if (isActive) {
+          btn.classList.add('card-surface', 'text-amber-400', 'border', 'border-amber-500/40', 'shadow-xs');
+          btn.classList.remove('text-muted');
+        } else {
+          btn.classList.remove('card-surface', 'text-amber-400', 'border', 'border-amber-500/40', 'shadow-xs');
+          btn.classList.add('text-muted');
+        }
+      });
+
+      const crateTitles = ['Blind Bag #1 • Vanguard', 'Blind Bag #2 • Recon', 'Blind Bag #3 • Levi Squad'];
+      const bagBadges = ['Secret • Rare ✨', 'Lucky • Fortune 🍀', 'Cute • Kawaii 🌸'];
+      grid.innerHTML = state.cratePool.map((promptIndex, slot) => {
+        const promptObj = lang.prompts[promptIndex % lang.prompts.length];
+        const isOpened = state.openedCrateSlot === slot;
+        return `
+          <button type="button" data-crate-slot="${slot}"
+            class="crate-card text-left rounded-3xl border-2 p-5 transition-all flex flex-col justify-between min-h-[195px] relative overflow-hidden group
+            ${isOpened
+              ? 'border-amber-400 bg-gradient-to-b from-amber-500/20 to-amber-500/5 shadow-lg shadow-amber-500/10'
+              : 'border-theme subtle-surface hover:border-amber-400/80 hover:bg-amber-500/5'}">
+            <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-amber-500/30 via-rose-400/30 to-amber-500/30"></div>
+
+            <div class="flex items-center justify-between w-full pt-1">
+              <span class="text-[11px] font-regiment font-bold uppercase tracking-wider text-amber-400">${crateTitles[slot]}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">${bagBadges[slot]}</span>
+            </div>
+
+            <div class="my-3 flex items-center gap-3">
+              <div class="w-12 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 via-amber-500/20 to-emerald-500/20 border border-amber-400/40 flex flex-col items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-xs">
+                <span class="text-2xl">${isOpened ? '🎊' : '🧧'}</span>
+                <span class="text-[9px] font-bold tracking-widest text-amber-300 uppercase mt-0.5">${isOpened ? 'OPEN' : 'BLIND'}</span>
+              </div>
+              <div class="min-w-0">
+                ${isOpened
+                  ? `<div class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">✓ Unsealed: ${promptObj.crateTag}</div>
+                     <p class="text-sm font-bold leading-snug line-clamp-2">${promptObj.native}</p>`
+                  : `<div class="text-base font-regiment font-bold tracking-wide group-hover:text-amber-300 transition">Scout Blind Bag</div>
+                     <p class="text-xs text-muted mt-1">Tap to tear open this blind bag and reveal your surprise writing prompt!</p>`
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-semibold pt-2 border-t border-theme/60">
+              <span class="text-muted">${isOpened ? 'Bag selected' : 'Click to tear open'}</span>
+              <span class="text-amber-400">${isOpened ? 'Selected ★' : 'Tear Open →'}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('button[data-crate-slot]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const slot = Number(btn.dataset.crateSlot);
+          btn.classList.add('crate-opening');
+          setTimeout(() => {
+            state.openedCrateSlot = slot;
+            const chosenPromptIdx = state.cratePool[slot];
+            state.promptIdx = chosenPromptIdx;
+            state.freeWrite = false;
+            const promptObj = lang.prompts[chosenPromptIdx % lang.prompts.length];
+
+            document.getElementById('revealed-crate-badge').textContent = promptObj.crateCode;
+            document.getElementById('revealed-topic-native').textContent = promptObj.native;
+            document.getElementById('revealed-topic-en').textContent = promptObj.en;
+            document.getElementById('crate-revealed-panel').classList.remove('hidden');
+
+            renderMysteryCrates();
+            renderPromptAndHints();
+          }, 260);
+        });
+      });
+    }
+
+    function openMysteryGate() {
+      rollThreeMysteryCrates();
+      renderAoTQuotes();
+      document.getElementById('mystery-gate-overlay').classList.remove('hidden');
+    }
+
+    function closeMysteryGate() {
+      document.getElementById('mystery-gate-overlay').classList.add('hidden');
+      elEditor.focus();
+    }
+
+    function applyLanguageSwitch(langId) {
+      state.langId = (langId === 'ja') ? 'ja' : 'zh';
+      state.pinyinBuffer = '';
+      state.vkShift = false;
+      elInspectorCard.classList.add('hidden');
+      updateCandidateBar();
+
+      document.querySelectorAll('.lang-tab').forEach(tab => {
+        const isActive = tab.dataset.lang === state.langId;
+        if (isActive) {
+          tab.classList.add('card-surface', 'shadow-xs', 'text-amber-400', 'border', 'border-amber-500/40');
+          tab.classList.remove('text-muted');
+        } else {
+          tab.classList.remove('card-surface', 'shadow-xs', 'text-amber-400', 'border', 'border-amber-500/40');
+          tab.classList.add('text-muted');
+        }
+      });
+
+      const lang = getCurrentLang();
+      elEditor.dir = lang.dir;
+      elEditor.placeholder = lang.placeholder;
+      elVkTitle.textContent = `${lang.native} Keyboard`;
+      elImeBadge.textContent = state.instantScript ? lang.imeHint : 'Instant Script OFF';
+
+      renderAoTQuotes();
+      renderPromptAndHints();
+      renderVirtualKeyboard();
+      updateDraftReaderStrip();
+      if (!document.getElementById('mystery-gate-overlay').classList.contains('hidden')) {
+        rollThreeMysteryCrates();
+      }
+      saveState();
+    }
+
+    function renderPromptAndHints() {
+      const lang = getCurrentLang();
+      const badge = document.getElementById('prompt-badge');
+      const nativeEl = document.getElementById('prompt-native');
+      const enEl = document.getElementById('prompt-en');
+      const starterEl = document.getElementById('hint-starter');
+      const vocabEl = document.getElementById('hint-vocab');
+
+      document.getElementById('motivator-quote').textContent = MOTIVATORS[state.promptIdx % MOTIVATORS.length];
+
+      if (state.freeWrite) {
+        badge.textContent = 'Free Write';
+        nativeEl.textContent = lang.id === 'ja' ? '自由記述 — 何でも好きなことを書こう！' : '自由写作 — 写任何你想表达的内容！';
+        enEl.textContent = 'Write freely about your day, thoughts, a story, or your goals.';
+        starterEl.textContent = lang.sample;
+        vocabEl.innerHTML = '';
+        return;
+      }
+
+      const p = lang.prompts[state.promptIdx % lang.prompts.length];
+      badge.textContent = p.crateTag || 'Expedition Topic';
+      nativeEl.innerHTML = wrapInspectableCharacters(p.native);
+      enEl.textContent = p.en;
+      starterEl.textContent = p.starter;
+      vocabEl.innerHTML = (p.vocab || []).map(([word, gloss]) => {
+        const cleanWord = word.split(' ')[0];
+        return `<button type="button" class="vocab-chip px-2.5 py-1 rounded-lg subtle-surface border hover:border-amber-500/60 text-xs font-medium transition" data-insert="${cleanWord}" title="${gloss}">
+          <span class="font-bold text-amber-300">${word}</span> <span class="text-muted">• ${gloss}</span>
+        </button>`;
+      }).join('');
+
+      vocabEl.querySelectorAll('.vocab-chip').forEach(btn => {
+        btn.addEventListener('click', () => insertAtCursor(btn.dataset.insert));
+      });
+    }
+
+    function renderVirtualKeyboard() {
+      const lang = getCurrentLang();
+      const rows = state.vkShift ? lang.keyboardShift : lang.keyboard;
+      elVkRows.innerHTML = rows.map(row => `
+        <div class="flex justify-center gap-1 sm:gap-1.5">
+          ${row.map(key => `
+            <button type="button" data-vkey="${key}"
+              class="vkey flex-1 max-w-[46px] h-9 sm:h-10 rounded-lg subtle-surface border font-semibold text-sm sm:text-base flex items-center justify-center hover:border-amber-500/60">
+              ${key}
+            </button>
+          `).join('')}
+        </div>
+      `).join('') + `
+        <div class="flex justify-center gap-1.5 pt-0.5">
+          <button type="button" data-vkey="SPACE" class="vkey flex-1 max-w-xs h-9 rounded-lg subtle-surface border text-xs font-semibold text-muted">Space / Pick #1</button>
+          <button type="button" data-vkey="BACKSPACE" class="vkey px-4 h-9 rounded-lg subtle-surface border text-xs font-semibold text-amber-400">⌫ Backspace</button>
+        </div>
+      `;
+
+      elVkRows.querySelectorAll('button[data-vkey]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const k = btn.dataset.vkey;
+          if (k === 'SPACE') {
+            if (state.pinyinBuffer) {
+              commitCandidate(0);
+            } else {
+              insertAtCursor(' ');
+            }
+          } else if (k === 'BACKSPACE') {
+            if (state.pinyinBuffer) {
+              state.pinyinBuffer = state.pinyinBuffer.slice(0, -1);
+              updateCandidateBar();
+            } else {
+              const start = elEditor.selectionStart;
+              const end = elEditor.selectionEnd;
+              if (start > 0 || start !== end) {
+                const delStart = start === end ? start - 1 : start;
+                elEditor.value = elEditor.value.slice(0, delStart) + elEditor.value.slice(end);
+                elEditor.setSelectionRange(delStart, delStart);
+                onEditorContentUpdated();
+              }
+            }
+          } else if (state.instantScript && /^[a-zA-Z]$/.test(k)) {
+            handleInstantScriptKey(k.toLowerCase());
+          } else {
+            insertAtCursor(k);
+          }
+        });
+      });
+    }
+
+    // =========================================================================
+    // 7. ZERO-SPACE PRECISION IME ENGINE (MANDARIN PINYIN & JAPANESE ROMAJI)
+    // =========================================================================
+    function getCurrentCandidateObjects() {
+      const buf = state.pinyinBuffer.toLowerCase();
+      if (!buf) return [];
+
+      if (state.langId === 'zh') {
+        return decodePinyinPhraseCandidates(buf);
+      }
+
+      if (state.langId === 'ja') {
+        if (JP_KANJI_DICT[buf]) {
+          return JP_KANJI_DICT[buf].map(text => ({ text, consumedSylCount: 1 }));
+        }
+        const prefixMatches = Object.keys(JP_KANJI_DICT).filter(k => k.startsWith(buf));
+        const res = [{ text: buf, consumedSylCount: 1 }];
+        prefixMatches.forEach(k => {
+          JP_KANJI_DICT[k].forEach(item => {
+            if (!res.some(r => r.text === item)) res.push({ text: item, consumedSylCount: 1 });
+          });
+        });
+        return res.slice(0, 8);
+      }
+      return [];
+    }
+
+    function getCurrentCandidates() {
+      return getCurrentCandidateObjects().map(c => c.text);
+    }
+
+    function updateCandidateBar() {
+      if (!state.pinyinBuffer) {
+        elCandidateBar.classList.add('hidden');
+        return;
+      }
+      const candidates = getCurrentCandidates();
+      elCandidateBar.classList.remove('hidden');
+
+      if (state.langId === 'zh') {
+        const segs = segmentPinyin(state.pinyinBuffer);
+        elBufferDisplay.textContent = segs.length ? segs.map(s => s.text).join("'") : state.pinyinBuffer;
+      } else {
+        elBufferDisplay.textContent = state.pinyinBuffer;
+      }
+
+      elCandidatesList.innerHTML = candidates.map((cand, idx) => {
+        const info = lookupCharacterMeaning(cand, state.langId);
+        const shortMeaning = info && info.meaning && info.meaning !== 'Context-dependent character'
+          ? ` <span class="text-[10px] text-muted">(${info.meaning.split(';')[0].slice(0, 22)})</span>`
+          : '';
+        return `<button type="button" data-cand-idx="${idx}" class="px-2.5 py-1 rounded-lg card-surface border border-amber-500/40 hover:bg-amber-500/20 text-xs sm:text-sm font-medium shrink-0 transition">
+          <span class="text-amber-400 font-bold mr-1">${idx + 1}.</span>${cand}${shortMeaning}
+        </button>`;
+      }).join('');
+
+      elCandidatesList.querySelectorAll('button[data-cand-idx]').forEach(btn => {
+        btn.addEventListener('click', () => commitCandidate(Number(btn.dataset.candIdx)));
+      });
+    }
+
+    function commitCandidate(index = 0) {
+      const candObjs = getCurrentCandidateObjects();
+      const picked = candObjs[index];
+      const chosen = picked ? picked.text : state.pinyinBuffer;
+
+      if (state.langId === 'zh' && picked) {
+        const segs = segmentPinyin(state.pinyinBuffer);
+        const completeSegs = segs.filter(s => s.complete);
+        const consumed = picked.consumedSylCount || completeSegs.length;
+
+        if (consumed >= completeSegs.length) {
+          const remainder = segs.slice(completeSegs.length).map(s => s.text).join('');
+          state.pinyinBuffer = remainder;
+        } else {
+          const remainingSegs = segs.slice(consumed).map(s => s.text).join('');
+          state.pinyinBuffer = remainingSegs;
+        }
+        insertAtCursor(chosen);
+      } else {
+        state.pinyinBuffer = '';
+        insertAtCursor(chosen);
+      }
+      updateCandidateBar();
+    }
+
+    function handleInstantScriptKey(ch) {
+      if (state.langId === 'zh') {
+        const nextBuf = state.pinyinBuffer + ch;
+        if (nextBuf.length > 36) {
+          commitCandidate(0);
+          state.pinyinBuffer = ch;
+        } else {
+          state.pinyinBuffer = nextBuf;
+        }
+        updateCandidateBar();
+        return;
+      }
+
+      if (state.langId === 'ja') {
+        const raw = state.pinyinBuffer + ch;
+        const asciiMatch = raw.match(/[a-z']+$/);
+        if (!asciiMatch) {
+          state.pinyinBuffer = raw;
+          updateCandidateBar();
+          return;
+        }
+        let prefixKana = raw.slice(0, asciiMatch.index);
+        let tail = asciiMatch[0];
+
+        if (tail.length >= 2 && tail[0] === tail[1] && 'bcdfghjklmpqrstvwxyz'.includes(tail[0]) && tail[0] !== 'n') {
+          prefixKana += 'っ';
+          tail = tail.slice(1);
+        }
+        if (tail.length >= 2 && tail[0] === 'n' && !'aeiouyn\''.includes(tail[1])) {
+          prefixKana += 'ん';
+          tail = tail.slice(1);
+        }
+
+        if (JP_ROMAJI_MAP[tail]) {
+          state.pinyinBuffer = prefixKana + JP_ROMAJI_MAP[tail];
+        } else {
+          state.pinyinBuffer = prefixKana + tail;
+        }
+        updateCandidateBar();
+      }
+    }
+
+    elEditor.addEventListener('keydown', (e) => {
+      const vkBtn = elVkRows.querySelector(`[data-vkey="${e.key.toLowerCase()}"]`);
+      if (vkBtn) {
+        vkBtn.classList.add('key-pressed');
+        setTimeout(() => vkBtn.classList.remove('key-pressed'), 120);
+      }
+
+      if (!state.instantScript || e.ctrlKey || e.metaKey || e.altKey) return;
+
+      if (state.pinyinBuffer) {
+        if (e.key >= '1' && e.key <= '9') {
+          e.preventDefault();
+          commitCandidate(Number(e.key) - 1);
+          return;
+        }
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          commitCandidate(0);
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          const raw = state.pinyinBuffer;
+          state.pinyinBuffer = '';
+          updateCandidateBar();
+          insertAtCursor(raw);
+          return;
+        }
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          state.pinyinBuffer = state.pinyinBuffer.slice(0, -1);
+          updateCandidateBar();
+          return;
+        }
+      }
+
+      if (/^[a-zA-Z]$/.test(e.key)) {
+        e.preventDefault();
+        handleInstantScriptKey(e.key.toLowerCase());
+      }
+    });
+
+    elEditor.addEventListener('mouseup', () => {
+      const selected = elEditor.value.slice(elEditor.selectionStart, elEditor.selectionEnd).trim();
+      if (selected && /[\u4e00-\u9fff\u3040-\u30ff]/.test(selected) && selected.length <= 8) {
+        inspectCharacterToken(selected, elEditor.getBoundingClientRect());
+      }
+    });
+
+    // =========================================================================
+    // 8. STREAK TRACKING, THEMES & NATIVE COACH ENGINE
+    // =========================================================================
+    let liveCoachTimer = null;
+
+    function onEditorContentUpdated() {
+      const text = elEditor.value.trim();
+      const charLen = text.length;
+      const wordLen = text ? text.split(/\s+/).length : 0;
+      document.getElementById('char-count').textContent = charLen;
+      document.getElementById('word-count').textContent = wordLen;
+      updateDraftReaderStrip();
+
+      if (charLen >= 8) {
+        recordDailyActivity(charLen);
+      }
+
+      if (state.liveCoach && charLen >= 6) {
+        clearTimeout(liveCoachTimer);
+        liveCoachTimer = setTimeout(() => runNativeCoachAnalysis(true), 1600);
+      }
+    }
+
+    elEditor.addEventListener('input', onEditorContentUpdated);
+
+    function recordDailyActivity(charLen) {
+      const today = new Date().toDateString();
+      if (state.lastWriteDate !== today) {
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        state.streak = (state.lastWriteDate === yesterday) ? state.streak + 1 : Math.max(1, state.streak);
+        state.lastWriteDate = today;
+        checkMilestoneUnlock(state.streak);
+      }
+      state.totalWords = Math.max(state.totalWords, charLen);
+      updateStreakUI();
+      saveState();
+    }
+
+    function checkMilestoneUnlock(days) {
+      const hit = MILESTONES.find(m => m.days === days);
+      if (hit) {
+        showToast(`Milestone Unlocked: ${hit.title}! ${hit.reward}`, hit.icon);
+      }
+    }
+
+    function updateStreakUI() {
+      document.getElementById('header-streak-count').textContent = state.streak;
+      document.getElementById('modal-streak-days').textContent = state.streak;
+      document.getElementById('modal-total-words').textContent = state.totalWords;
+
+      const milestonesGrid = document.getElementById('streak-milestones-grid');
+      if (milestonesGrid) {
+        milestonesGrid.innerHTML = MILESTONES.map(m => {
+          const unlocked = state.streak >= m.days;
+          return `<div class="p-3 rounded-xl border ${unlocked ? 'border-amber-500/50 bg-amber-500/10' : 'border-theme subtle-surface opacity-60'}">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-lg">${m.icon}</span>
+              <span class="text-[11px] font-bold ${unlocked ? 'text-emerald-400' : 'text-muted'}">${unlocked ? 'UNLOCKED' : `${m.days}d`}</span>
+            </div>
+            <div class="text-xs font-bold">${m.title}</div>
+            <div class="text-[11px] text-muted">${m.reward}</div>
+          </div>`;
+        }).join('');
+      }
+
+      const themeGrid = document.getElementById('theme-selector-grid');
+      if (themeGrid) {
+        themeGrid.innerHTML = THEMES.map(t => {
+          const unlocked = state.streak >= t.minStreak;
+          const active = state.theme === t.id;
+          return `<button type="button" data-theme-id="${t.id}"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold border flex items-center gap-2 transition
+            ${active ? 'border-amber-400 bg-amber-500/15 text-amber-300' : 'border-theme subtle-surface'} ${!unlocked ? 'opacity-50' : ''}">
+            <span class="w-3 h-3 rounded-full border border-white/30" style="background:${t.swatch}"></span>
+            <span>${t.name}</span>
+            ${!unlocked ? `<span class="text-[10px]">🔒 ${t.minStreak}d</span>` : ''}
+          </button>`;
+        }).join('');
+
+        themeGrid.querySelectorAll('button[data-theme-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            applyTheme(btn.dataset.themeId);
+            updateStreakUI();
+          });
+        });
+      }
+    }
+
+    function applyTheme(themeId) {
+      const themeObj = THEMES.find(t => t.id === themeId) || THEMES[0];
+      if (state.streak < themeObj.minStreak) {
+        showToast(`Reach a ${themeObj.minStreak}-day streak to unlock ${themeObj.name}!`, '🔒');
+        return;
+      }
+      state.theme = themeObj.id;
+      document.documentElement.className = themeObj.className;
+      if (themeObj.id !== 'paradis') {
+        document.documentElement.classList.add('dark');
+      }
+      saveState();
+    }
+
+    function runNativeCoachAnalysis(isSilent = false) {
+      const text = elEditor.value.trim();
+      if (!text) {
+        if (!isSilent) showToast('Write at least one sentence first!', '✍️');
+        return;
+      }
+
+      document.getElementById('coach-empty-state').classList.add('hidden');
+      document.getElementById('coach-loading').classList.remove('hidden');
+      document.getElementById('coach-results').classList.add('hidden');
+
+      setTimeout(() => {
+        const isJa = state.langId === 'ja';
+        const corrected = isJa
+          ? text.replace(/です。?$/, 'ですよ！').replace(/ます。?$/, 'ました！')
+          : text.replace(/很不错。?$/, '真的超赞！').replace(/好喝。?$/, '特别好喝，强烈推荐！');
+
+        const fixes = isJa
+          ? [
+              'Natural particle & cadence flow checked—ending with 「〜ですよ / 〜ました」 adds warm conversational tone.',
+              'Click any dotted-underlined Kanji in the expressions below to inspect its reading & meaning.'
+            ]
+          : [
+              'Sentence structure and measure words look natural—adding degree adverbs like 「超级 / 特别」 makes it sound more native.',
+              'Click any dotted-underlined character below to check its Pinyin and English definition.'
+            ];
+
+        const nativePhrases = isJa
+          ? [
+              { phrase: 'めっちゃ癒された！', gloss: 'I felt super healed / relaxed! (Everyday casual Japanese)', starter: '今日は本当にめっちゃ癒された！' },
+              { phrase: '個人的にかなりアリかも。', gloss: 'Personally, I’m totally into it / pretty solid.', starter: '個人的にかなりアリかもと思うのは、' }
+            ]
+          : [
+              { phrase: '氛围感直接拉满！', gloss: 'The vibe / atmosphere was off the charts! (Modern trending Mandarin)', starter: '那里的氛围感直接拉满，' },
+              { phrase: '瞬间被治愈了。', gloss: 'Instantly felt comforted / healed.', starter: '那一刻我感觉整个人瞬间被治愈了。' }
+            ];
+
+        const nextIdeas = isJa
+          ? [
+              { label: 'Add a sensory detail (smell, sound, or atmosphere)', starter: '特に印象に残ったのは、' },
+              { label: 'Share who you would invite next time', starter: '今度は友達も連れて行って、' }
+            ]
+          : [
+              { label: 'Describe a sensory detail (music, lighting, or flavor)', starter: '最让我印象深刻的是，' },
+              { label: 'Wrap up with what you want to do next', starter: '下次有机会的话，我还想' }
+            ];
+
+        document.getElementById('res-corrected').innerHTML = wrapInspectableCharacters(corrected);
+        document.getElementById('res-fixes').innerHTML = fixes.map(f => `<li>${f}</li>`).join('');
+
+        document.getElementById('res-native-phrases').innerHTML = nativePhrases.map(item => `
+          <div class="p-2.5 rounded-xl card-surface border border-theme flex items-start justify-between gap-2">
+            <div>
+              <div class="text-sm font-bold">${wrapInspectableCharacters(item.phrase)}</div>
+              <div class="text-xs text-muted">${item.gloss}</div>
+            </div>
+            <button type="button" class="insert-coach-btn px-2 py-1 rounded-lg text-[11px] font-semibold bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 shrink-0" data-insert="${item.starter}">+ Use</button>
+          </div>
+        `).join('');
+
+        document.getElementById('res-next-ideas').innerHTML = nextIdeas.map(idea => `
+          <button type="button" class="insert-coach-btn w-full text-left p-2.5 rounded-xl card-surface border border-theme hover:border-sky-400/60 transition flex items-center justify-between gap-2" data-insert="${idea.starter}">
+            <span class="text-xs font-medium">${idea.label}</span>
+            <span class="text-xs font-bold text-sky-400 shrink-0">+ Insert →</span>
+          </button>
+        `).join('');
+
+        document.querySelectorAll('.insert-coach-btn').forEach(btn => {
+          btn.addEventListener('click', () => insertAtCursor(btn.dataset.insert));
+        });
+
+        document.getElementById('btn-apply-correction').onclick = () => {
+          elEditor.value = corrected;
+          onEditorContentUpdated();
+          showToast('Applied polished version to editor!', '✓');
+        };
+
+        document.getElementById('coach-loading').classList.add('hidden');
+        document.getElementById('coach-results').classList.remove('hidden');
+      }, isSilent ? 350 : 500);
+    }
+
+    // =========================================================================
+    // 9. JOURNAL ARCHIVE & REMINDERS
+    // =========================================================================
+    function saveCurrentEntryToArchive() {
+      const content = elEditor.value.trim();
+      if (!content) {
+        showToast('Write something before saving!', '✍️');
+        return;
+      }
+      const lang = getCurrentLang();
+      state.entries.unshift({
+        id: Date.now(),
+        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+        langId: lang.id,
+        langNative: lang.native,
+        text: content
+      });
+      if (state.entries.length > 50) state.entries.pop();
+      saveState();
+      showToast(`Saved ${lang.native} journal entry!`, '📚');
+    }
+
+    function renderArchiveList() {
+      const list = document.getElementById('archive-list');
+      if (!list) return;
+      if (!state.entries.length) {
+        list.innerHTML = `<p class="text-xs text-muted text-center py-8">No expedition logs saved yet. Click "Log Entry" after writing to save your progress!</p>`;
+        return;
+      }
+      list.innerHTML = state.entries.map(entry => `
+        <div class="p-3.5 rounded-xl subtle-surface border space-y-1.5">
+          <div class="flex items-center justify-between text-xs text-muted">
+            <span class="font-bold text-amber-400">${entry.langNative}</span>
+            <span>${entry.date}</span>
+          </div>
+          <p class="text-sm leading-relaxed">${wrapInspectableCharacters(entry.text)}</p>
+        </div>
+      `).join('');
+    }
+
+    function triggerReminderAlert() {
+      const msg = 'Survey Corps Dispatch: Time for your daily Mandarin/Japanese writing mission!';
+      showToast(msg, '⏰');
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('LinguaFlow — Daily Mission', { body: msg });
+      }
+    }
+
+    function initReminderLoop() {
+      document.getElementById('reminder-time-input').value = state.reminder.time || '20:00';
+      document.getElementById('reminder-enabled-checkbox').checked = !!state.reminder.enabled;
+      document.getElementById('reminder-dot').classList.toggle('hidden', !state.reminder.enabled);
+
+      setInterval(() => {
+        if (!state.reminder.enabled) return;
+        const now = new Date();
+        const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const today = now.toDateString();
+        if (hhmm === state.reminder.time && state.reminder.notifiedToday !== today) {
+          state.reminder.notifiedToday = today;
+          saveState();
+          triggerReminderAlert();
+        }
+      }, 30000);
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('.lang-tab').forEach(btn => {
+        btn.addEventListener('click', () => applyLanguageSwitch(btn.dataset.lang));
+      });
+
+      document.querySelectorAll('.gate-lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyLanguageSwitch(btn.dataset.gateLang));
+      });
+      document.getElementById('btn-reroll-crates').addEventListener('click', rollThreeMysteryCrates);
+      document.getElementById('btn-pick-another-crate').addEventListener('click', rollThreeMysteryCrates);
+      document.getElementById('btn-enter-writing-pane').addEventListener('click', closeMysteryGate);
+      document.getElementById('btn-skip-gate-freewrite').addEventListener('click', () => {
+        state.freeWrite = true;
+        renderPromptAndHints();
+        closeMysteryGate();
+      });
+      document.getElementById('btn-open-mystery-gate').addEventListener('click', openMysteryGate);
+
+      document.getElementById('btn-next-aot-quote').addEventListener('click', () => {
+        state.quoteIdx = (state.quoteIdx + 1) % AOT_QUOTES.length;
+        renderAoTQuotes();
+      });
+
+      document.addEventListener('click', (e) => {
+        const lookupEl = e.target.closest('[data-lookup]');
+        if (lookupEl) {
+          e.stopPropagation();
+          inspectCharacterToken(lookupEl.dataset.lookup, lookupEl.getBoundingClientRect());
+          return;
+        }
+        if (!e.target.closest('#char-inspector-card') && e.target !== elEditor) {
+          elInspectorCard.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('btn-close-inspector').addEventListener('click', () => {
+        elInspectorCard.classList.add('hidden');
+      });
+
+      document.getElementById('btn-inspector-insert').addEventListener('click', () => {
+        if (state.inspectorText) {
+          insertAtCursor(state.inspectorText);
+          elInspectorCard.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('btn-toggle-hint').addEventListener('click', () => {
+        document.getElementById('hint-drawer').classList.toggle('hidden');
+      });
+
+      document.getElementById('btn-shuffle-prompt').addEventListener('click', openMysteryGate);
+
+      document.getElementById('btn-free-write').addEventListener('click', () => {
+        state.freeWrite = !state.freeWrite;
+        renderPromptAndHints();
+      });
+
+      document.getElementById('hint-starter').addEventListener('click', (e) => {
+        insertAtCursor(e.target.textContent + ' ');
+      });
+
+      document.getElementById('toggle-instant-script').addEventListener('change', (e) => {
+        state.instantScript = e.target.checked;
+        state.pinyinBuffer = '';
+        applyLanguageSwitch(state.langId);
+      });
+
+      document.getElementById('btn-toggle-vk').addEventListener('click', () => {
+        state.vkVisible = !state.vkVisible;
+        elVkSection.classList.toggle('hidden', !state.vkVisible);
+        document.getElementById('vk-btn-label').textContent = state.vkVisible ? 'Hide Keyboard' : 'Show Keyboard';
+      });
+
+      document.getElementById('btn-vk-shift').addEventListener('click', () => {
+        state.vkShift = !state.vkShift;
+        renderVirtualKeyboard();
+      });
+
+      document.getElementById('toggle-live-coach').addEventListener('change', (e) => {
+        state.liveCoach = e.target.checked;
+        document.getElementById('live-status-pill').classList.toggle('hidden', !state.liveCoach);
+        if (state.liveCoach) {
+          showToast('Live Coach enabled — pauses will trigger automatic feedback', '⚡');
+        }
+      });
+
+      document.getElementById('btn-analyze').addEventListener('click', () => runNativeCoachAnalysis(false));
+      document.getElementById('btn-save-entry').addEventListener('click', saveCurrentEntryToArchive);
+
+      document.getElementById('btn-insert-sample').addEventListener('click', () => {
+        const lang = getCurrentLang();
+        elEditor.value = lang.sample;
+        onEditorContentUpdated();
+        runNativeCoachAnalysis(false);
+      });
+
+      document.getElementById('btn-streak-modal').addEventListener('click', () => {
+        updateStreakUI();
+        document.getElementById('modal-streak').classList.remove('hidden');
+      });
+
+      document.getElementById('btn-simulate-streak').addEventListener('click', () => {
+        state.streak += 1;
+        saveState();
+        updateStreakUI();
+        checkMilestoneUnlock(state.streak);
+        showToast(`Simulated +1 day! Streak is now ${state.streak} days`, '🔥');
+      });
+
+      document.getElementById('btn-reminder-modal').addEventListener('click', () => {
+        document.getElementById('modal-reminder').classList.remove('hidden');
+      });
+
+      document.getElementById('btn-save-reminder').addEventListener('click', async () => {
+        const enabled = document.getElementById('reminder-enabled-checkbox').checked;
+        const time = document.getElementById('reminder-time-input').value;
+        if (enabled && 'Notification' in window && Notification.permission === 'default') {
+          await Notification.requestPermission();
+        }
+        state.reminder = { ...state.reminder, enabled, time };
+        document.getElementById('reminder-dot').classList.toggle('hidden', !enabled);
+        saveState();
+        document.getElementById('modal-reminder').classList.add('hidden');
+        showToast(enabled ? `Daily reminder set for ${time}` : 'Reminder paused', '⏰');
+      });
+
+      document.getElementById('btn-test-reminder').addEventListener('click', triggerReminderAlert);
+
+      document.getElementById('btn-archive-modal').addEventListener('click', () => {
+        renderArchiveList();
+        document.getElementById('modal-archive').classList.remove('hidden');
+      });
+
+      document.getElementById('btn-cycle-theme').addEventListener('click', () => {
+        const unlockedThemes = THEMES.filter(t => state.streak >= t.minStreak);
+        const curIdx = unlockedThemes.findIndex(t => t.id === state.theme);
+        const next = unlockedThemes[(curIdx + 1) % unlockedThemes.length];
+        applyTheme(next.id);
+        showToast(`Theme: ${next.name}`, '🎨');
+      });
+
+      document.querySelectorAll('[data-close-modal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById(btn.dataset.closeModal).classList.add('hidden');
+        });
+      });
+    }
+
+    // Initialize App
+    loadState();
+    applyTheme(state.theme);
+    applyLanguageSwitch(state.langId);
+    rollThreeMysteryCrates();
+    updateStreakUI();
+    initReminderLoop();
+    bindEvents();
+  </script>
+</body>
+</html>
